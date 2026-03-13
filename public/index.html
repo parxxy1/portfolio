@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <title>Parker Birwin — Portfolio</title>
+  <style>
+    @font-face {
+      font-family: 'Stolzl';
+      src: local('Stolzl Bold'), local('Stolzl-Bold');
+      /* Try local assuming they have it, or fallback */
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #fdffff;
+    }
+
+    canvas {
+      display: block;
+      cursor: crosshair;
+    }
+
+    /* UI Overlay */
+    #ui-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      padding: 7px 27px;
+    }
+
+    nav {
+      display: flex;
+      gap: 40px;
+      align-items: center;
+      justify-content: flex-end;
+      width: 100%;
+      pointer-events: auto;
+    }
+
+    nav a {
+      font-family: 'Stolzl', sans-serif;
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: -2.56px;
+      color: #43291f;
+      text-decoration: none;
+      line-height: 1.216;
+    }
+
+    nav a:hover {
+      opacity: 0.8;
+    }
+
+    #menu {
+      position: fixed;
+      right: 27px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 93px;
+      pointer-events: auto;
+    }
+
+    .tool-btn {
+      font-family: 'Stolzl', sans-serif;
+      font-size: 20px;
+      font-weight: 400;
+      letter-spacing: -0.8px;
+      color: #fdffff;
+      background: #9d7e67;
+      height: auto;
+      width: auto;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      outline: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 13px 22px;
+      transition: background 0.12s, opacity 0.12s;
+    }
+
+    .tool-btn:hover {
+      opacity: 0.8;
+    }
+
+    .tool-btn.active {
+      background: #43291f;
+      color: #fdffff;
+    }
+
+    /* We'll draw the text on the canvas so it interacts with sand */
+    #ui-layer nav { display: none; }
+
+    @media (max-width: 768px) {
+      #menu {
+        right: 0;
+        left: 0;
+        top: auto;
+        bottom: 20px;
+        transform: none;
+        flex-direction: row;
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        padding: 0 10px;
+        gap: 8px;
+      }
+      .tool-btn {
+        padding: 8px 12px;
+        font-size: 14px;
+        border-radius: 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="ui-layer">
+    <nav>
+      <a href="work.html">work</a>
+      <a href="about.html">about</a>
+      <a href="contact.html">contact</a>
+    </nav>
+  </div>
+
+  <div id="menu">
+    <button class="tool-btn active" data-tool="sand">sand</button>
+    <button class="tool-btn" data-tool="water">water</button>
+    <button class="tool-btn" data-tool="bomb">bomb</button>
+    <button class="tool-btn" data-tool="concrete">concrete</button>
+    <button class="tool-btn" data-tool="vine">vine</button>
+    <button class="tool-btn" data-tool="torch">torch</button>
+    <button class="tool-btn" data-tool="creature" style="font-size: 16px;">creature <span id="creature-count"
+        style="margin-left: 4px; font-size: 11px; opacity: 0.7;">(0)</span></button>
+    <button class="tool-btn" data-tool="cat" style="font-size: 16px;">cat <span id="cat-count"
+        style="margin-left: 4px; font-size: 11px; opacity: 0.7;">(0)</span></button>
+    <input type="range" id="density-slider" min="1" max="20" value="8" style="margin-top:10px; cursor:pointer;"
+      title="Brush Density">
+  </div>
+
+  <canvas id="canvas"></canvas>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    // ── Procedural Audio Engine ───────────────────────────────────────────────
+    class AudioController {
+      constructor() {
+        this.ctx = null;
+        this.master = null;
+        this.sandFilter = null;
+        this.sandGain = null;
+      }
+
+      init() {
+        if (this.ctx) return;
+        this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        this.master = this.ctx.createGain();
+        this.master.gain.value = 0.5;
+        this.master.connect(this.ctx.destination);
+      }
+
+      playUI() {
+        if (!this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const g = this.ctx.createGain();
+        osc.connect(g);
+        g.connect(this.master);
+        osc.frequency.setValueAtTime(800, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(400, this.ctx.currentTime + 0.1);
+        g.gain.setValueAtTime(0.2, this.ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.1);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.1);
+      }
+
+      playSand() {
+        if (!this.ctx) return;
+        const noise = this.ctx.createBufferSource();
+        const bufferSize = 2 * this.ctx.sampleRate;
+        const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+        noise.buffer = buffer;
+
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = 800 + Math.random() * 400;
+        
+        const g = this.ctx.createGain();
+        g.gain.setValueAtTime(0.05, this.ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.05);
+
+        noise.connect(filter);
+        filter.connect(g);
+        g.connect(this.master);
+        noise.start();
+        noise.stop(this.ctx.currentTime + 0.05);
+      }
+
+      playWater() {
+        if (!this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const g = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(400 + Math.random() * 200, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(100, this.ctx.currentTime + 0.1);
+        g.gain.setValueAtTime(0.1, this.ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.1);
+        osc.connect(g);
+        g.connect(this.master);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.1);
+      }
+
+      playExplosion() {
+        if (!this.ctx) return;
+        // Thump
+        const osc = this.ctx.createOscillator();
+        const g = this.ctx.createGain();
+        osc.frequency.setValueAtTime(150, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(40, this.ctx.currentTime + 0.5);
+        g.gain.setValueAtTime(0.8, this.ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.5);
+        osc.connect(g);
+        g.connect(this.master);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.5);
+
+        // Brownish Noise Rumble
+        const bufferSize = this.ctx.sampleRate * 1;
+        const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        let lastOut = 0;
+        for (let i = 0; i < bufferSize; i++) {
+          let white = Math.random() * 2 - 1;
+          data[i] = (lastOut + (0.02 * white)) / 1.02;
+          lastOut = data[i];
+          data[i] *= 3.5; // Gain
+        }
+        const noise = this.ctx.createBufferSource();
+        noise.buffer = buffer;
+        const ng = this.ctx.createGain();
+        ng.gain.setValueAtTime(0.4, this.ctx.currentTime);
+        ng.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.8);
+        noise.connect(ng);
+        ng.connect(this.master);
+        noise.start();
+        noise.stop(this.ctx.currentTime + 1);
+      }
+
+      playTorch() {
+        if (!this.ctx) return;
+        const noise = this.ctx.createBufferSource();
+        const bufferSize = 1024;
+        const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+        noise.buffer = buffer;
+        noise.loop = true;
+
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'highpass';
+        filter.frequency.value = 2000;
+
+        const g = this.ctx.createGain();
+        g.gain.setValueAtTime(0.05, this.ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.1);
+
+        noise.connect(filter);
+        filter.connect(g);
+        g.connect(this.master);
+        noise.start();
+        noise.stop(this.ctx.currentTime + 0.1);
+      }
+
+      playStep() {
+        if (!this.ctx) return;
+        const noise = this.ctx.createBufferSource();
+        const bufferSize = 512;
+        const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+        noise.buffer = buffer;
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = 300;
+        const g = this.ctx.createGain();
+        g.gain.setValueAtTime(0.02, this.ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.05);
+        noise.connect(filter);
+        filter.connect(g);
+        g.connect(this.master);
+        noise.start();
+      }
+
+      playMeow() {
+        if (!this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const g = this.ctx.createGain();
+        osc.frequency.setValueAtTime(400, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(600, this.ctx.currentTime + 0.2);
+        osc.frequency.exponentialRampToValueAtTime(400, this.ctx.currentTime + 0.4);
+        g.gain.setValueAtTime(0.1, this.ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.4);
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = 800;
+        osc.connect(filter);
+        filter.connect(g);
+        g.connect(this.master);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.4);
+      }
+    }
+    const audio = new AudioController();
+
+    const CELL = 2;
+    // Update font settings based on Figma
+    const FONT_SIZE = 200;
+    const FONT = `700 ${FONT_SIZE}px 'Stolzl', sans-serif`;
+    const LINE1 = "hi i'm";
+    const LINE2 = "parker";
+    const LEFT_PAD = 0;  // Will center it
+    const STROKE_W = 24; // Doubled for 2px CELL
+    const POUR_RATE = 8;
+
+    // Particle types
+    const EMPTY = 0, SAND = 1, WATER = 2, BOMB = 3, FIRE = 4, CONCRETE = 5, VINE = 6, CREATURE = 7, GLASS = 8, ROOT = 9;
+
+    // Palette index ranges
+    const SAND_BASE = 0, SAND_COUNT = 8;
+    const WATER_BASE = 8, WATER_COUNT = 4;
+    const BOMB_DIM = 12;
+    const BOMB_HOT = 13;
+    const FIRE_BASE = 14, FIRE_COUNT = 6;
+    const CONC_BASE = 20, CONC_COUNT = 3;
+    const VINE_BASE = 23, VINE_COUNT = 4;
+    const CREATURE_BASE = 27; // single color
+    const GLASS_BASE = 28, GLASS_COUNT = 3;
+    const ROOT_BASE = 31, ROOT_COUNT = 3;
+
+    // Fire constants
+    const FIRE_LIFE = 22;
+    const WOOD_FIRE_LIFE = 250; // Wood burns much longer
+    const EXPL_R = 30;   // Doubled for 2px cells
+    const BOMB_FUSE = 120;  // frames until explosion
+
+    function u32(hex) {
+      const r = parseInt(hex.slice(1, 3), 16);
+      const g = parseInt(hex.slice(3, 5), 16);
+      const b = parseInt(hex.slice(5, 7), 16);
+      return ((0xFF << 24) | (b << 16) | (g << 8) | r) >>> 0;
+    }
+
+    function hslToU32(h, s, l) {
+      h = (h % 360 + 360) % 360;
+      h /= 360; s /= 100; l /= 100;
+      let r, g, b;
+      if (s === 0) {
+        r = g = b = l;
+      } else {
+        const hue2rgb = (p, q, t) => {
+          if (t < 0) t += 1;
+          if (t > 1) t -= 1;
+          if (t < 1/6) return p + (q - p) * 6 * t;
+          if (t < 1/2) return q;
+          if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+          return p;
+        };
+        const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        const p = 2 * l - q;
+        r = hue2rgb(p, q, h + 1/3);
+        g = hue2rgb(p, q, h);
+        b = hue2rgb(p, q, h - 1/3);
+      }
+      return ((0xFF << 24) | (Math.round(b * 255) << 16) | (Math.round(g * 255) << 8) | Math.round(r * 255)) >>> 0;
+    }
+
+    let PALETTE = [
+      /* 0-7  sand  */ u32('#e8c97a'), u32('#d4a843'), u32('#c89a2e'), u32('#f0d080'),
+      u32('#e2b95a'), u32('#ddb84e'), u32('#c9922a'), u32('#f5d96a'),
+      /* 8-11 water */ u32('#3a7bd5'), u32('#2563b8'), u32('#4a8fe0'), u32('#1e52a0'),
+      /* 12   bomb  */ u32('#cc2200'),
+      /* 13   flash */ u32('#ffee33'),
+      /* 14-19 fire */ u32('#fff06e'), u32('#ffb833'), u32('#ff6600'),
+      u32('#dd2200'), u32('#881100'), u32('#2a0500'),
+      /* 20-22 conc */ u32('#999999'), u32('#888888'), u32('#777777'),
+      /* 23-26 vine */ u32('#3a8c3d'), u32('#4ca950'), u32('#5ec964'), u32('#2e7031'),
+      /* 27    bug  */ u32('#513317'), // A dark branch-like brown for stick bugs
+      /* 28-30 glass*/ u32('#a5d4e4'), u32('#b4e6f4'), u32('#8cbcc9'),
+      /* 31-33 root */ u32('#5c3a1e'), u32('#6b4423'), u32('#4a2e14'),
+      /* 34    zombie */ u32('#7e22ce'),
+      /* 35    cat    */ u32('#ff8c00') // Bright orange
+    ];
+
+    const RAINBOW_BASE = 40;
+    const RAINBOW_COUNT = 200;
+    for (let i = 0; i < RAINBOW_COUNT; i++) {
+      PALETTE[RAINBOW_BASE + i] = hslToU32(i * (360 / RAINBOW_COUNT), 60, 50);
+    }
+
+    let sandHue = 48; // Starts at sand yellow
+    const INFECTED_BASE = 34;
+    const CAT_BASE = 35;
+
+    const C_WALL = u32('#43291f'); // Wall color from Figma design text color
+    const C_BG = u32('#fdffff'); // BG color from Figma design
+
+    let cols, rows;
+    let grid, gridCol, gridTimer, walls, visited;
+    let frameCount = 0;
+    let imgData, imgBuf;
+    let hoveredNavIndex = -1;
+
+    let creatures = [];
+    let cats = [];
+    let creatureSpawnedThisClick = false;
+    let navItems = []; // { text, x, y, w, h, url }
+    let wallNavID; // Int8Array mapping cell to nav item index
+
+    // ── Grid helpers ──────────────────────────────────────────────────────────
+    function ci(c, r) { return r * cols + c; }
+    function ok(c, r) { return c >= 0 && c < cols && r >= 0 && r < rows; }
+    function free(c, r) { return ok(c, r) && grid[ci(c, r)] === EMPTY && !walls[ci(c, r)]; }
+    function isWater(c, r) { return ok(c, r) && grid[ci(c, r)] === WATER && !walls[ci(c, r)]; }
+    function solid(c, r) {
+      if (!ok(c, r)) return true; // Out of bounds = solid
+      if (walls[ci(c, r)]) return true;
+      const t = grid[ci(c, r)];
+      return t !== EMPTY && t !== WATER && t !== FIRE;
+    }
+
+    function move(from, to) {
+      grid[to] = grid[from]; gridCol[to] = gridCol[from];
+      gridTimer[to] = gridTimer[from];
+      grid[from] = EMPTY; gridTimer[from] = 0;
+      visited[to] = frameCount;
+    }
+
+    function swap(from, to) {
+      const g = grid[to], c = gridCol[to], t = gridTimer[to];
+      grid[to] = grid[from]; gridCol[to] = gridCol[from]; gridTimer[to] = gridTimer[from];
+      grid[from] = g; gridCol[from] = c; gridTimer[from] = t;
+      visited[to] = frameCount;
+      visited[from] = frameCount;
+    }
+
+    // ── Letter walls ──────────────────────────────────────────────────────────
+    function buildWalls() {
+      const W = canvas.width, H = canvas.height;
+      const off = document.createElement('canvas');
+      off.width = W; off.height = H;
+      const oc = off.getContext('2d');
+
+      // Adjust font size based on screen width so it doesn't overflow on small screens
+      let currentFontSize = FONT_SIZE;
+      if (W < 1200) {
+        currentFontSize = Math.floor(W / 6); // Responsive scaling roughly
+      }
+
+      oc.font = `700 ${currentFontSize}px 'Stolzl', sans-serif`;
+      oc.fillStyle = '#43291f';
+      oc.textAlign = 'left';
+      oc.textBaseline = 'bottom';
+
+      // Position bottom left, with some padding
+      const textX = Math.max(20, W * 0.05);
+      // Put it above the bottom by a margin, but don't let it go off top
+      const textY = Math.max(currentFontSize + 100, H * 0.7);
+
+      const lineSpacing = 0.9;
+      const baseTop = textY - (currentFontSize * lineSpacing);
+
+      // Draw LINE1 ("hi i'm") in parts to make apostrophe smaller
+      const part1 = "hi i";
+      const part2 = "'";
+      const part3 = "m";
+
+      oc.fillText(part1, textX, baseTop);
+      let width1 = oc.measureText(part1).width;
+
+      oc.font = `700 ${currentFontSize * 0.7}px 'Stolzl', sans-serif`; // Smaller apostrophe
+      const apostropheOffset = currentFontSize * 0.3; // Shift it up
+      oc.fillText(part2, textX + width1, baseTop - apostropheOffset);
+      let width2 = oc.measureText(part2).width;
+
+      oc.font = `700 ${currentFontSize}px 'Stolzl', sans-serif`; // Back to normal
+      oc.fillText(part3, textX + width1 + width2, baseTop);
+
+      oc.fillText(LINE2, textX, textY);
+
+      // --- NAV LINKS (Top Right) ---
+      navItems = [];
+      const links = [
+        { text: 'work', url: 'work.html' },
+        { text: 'about', url: 'about.html' },
+        { text: 'contact', url: 'contact.html' }
+      ];
+
+      const navFontSize = 64; 
+      const navFontWeight = 700;
+      const navLetterSpacing = -2.56;
+      oc.font = `${navFontWeight} ${navFontSize}px 'Stolzl', sans-serif`;
+      const navSpacing = 40;
+
+      // Helper to measure text with spacing
+      const measureTextWithSpacing = (text) => {
+        let w = 0;
+        for (let char of text) {
+          w += oc.measureText(char).width + navLetterSpacing;
+        }
+        return w - navLetterSpacing; // remove last spacing
+      };
+
+      // Measure total width
+      let totalNavWidth = 0;
+      links.forEach((l, i) => {
+        totalNavWidth += measureTextWithSpacing(l.text) + (i < links.length - 1 ? navSpacing : 0);
+      });
+
+      let startX = W - totalNavWidth - 49; 
+      if (W < 768) {
+        startX = (W - totalNavWidth) / 2; 
+        oc.font = `${navFontWeight} 36px 'Stolzl', sans-serif`;
+      }
+
+      links.forEach((l, i) => {
+        const tw = measureTextWithSpacing(l.text);
+        const ty = (W < 768 ? 20 : 29) + (W < 768 ? 36 : navFontSize); 
+        
+        let charX = startX;
+        for (let char of l.text) {
+          oc.fillText(char, charX, ty);
+          charX += oc.measureText(char).width + navLetterSpacing;
+        }
+
+        navItems.push({ text: l.text, x: startX, y: ty - (W < 768 ? 36 : navFontSize), w: tw, h: (W < 768 ? 36 : navFontSize), url: l.url });
+        startX += tw + navSpacing;
+      });
+
+      const px = oc.getImageData(0, 0, W, H).data;
+      walls = new Uint8Array(cols * rows);
+      wallNavID = new Int8Array(cols * rows).fill(-1);
+
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          let hit = false;
+          outer: for (let py = 0; py < CELL; py++)
+            for (let pxc = 0; pxc < CELL; pxc++)
+              if (px[((r * CELL + py) * W + c * CELL + pxc) * 4 + 3] > 32) { hit = true; break outer; }
+          
+          if (hit) {
+            const idx = ci(c, r);
+            walls[idx] = 1;
+            // Check if this pixel belongs to a nav link
+            const worldX = c * CELL;
+            const worldY = r * CELL;
+            for (let i = 0; i < navItems.length; i++) {
+              const item = navItems[i];
+              if (worldX >= item.x - CELL && worldX <= item.x + item.w + CELL &&
+                  worldY >= item.y - CELL && worldY <= item.y + item.h + CELL) {
+                // Double check with actual pixel mapping if needed, but bounding box is close enough for tagging
+                wallNavID[idx] = i;
+                break;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // ── Resize ────────────────────────────────────────────────────────────────
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      cols = Math.floor(canvas.width / CELL);
+      rows = Math.floor(canvas.height / CELL);
+      grid = new Uint8Array(cols * rows);
+      gridCol = new Uint8Array(cols * rows);
+      gridTimer = new Uint8Array(cols * rows);
+      visited = new Uint32Array(cols * rows);
+      imgData = ctx.createImageData(canvas.width, canvas.height);
+      imgBuf = new Uint32Array(imgData.data.buffer);
+      buildWalls();
+      creatures = [];
+      cats = [];
+    }
+
+    // ── Tool menu ─────────────────────────────────────────────────────────────
+    let activeTool = 'sand';
+    let bombCooldown = 0;
+    let hasClickedMenu = false;
+
+    // Default POUR_RATE was 8. Let's make the slider use this value
+    const densitySlider = document.getElementById('density-slider');
+
+    document.querySelectorAll('.tool-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        audio.init(); audio.playUI();
+        hasClickedMenu = true;
+        activeTool = btn.dataset.tool;
+        document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        if (activeTool === 'concrete') {
+          densitySlider.value = (window.innerWidth < 768) ? 8 : 16;
+        } else if (activeTool === 'vine') {
+          densitySlider.value = 2;
+        } else if (activeTool === 'creature' || activeTool === 'cat') {
+          densitySlider.value = 1;
+        } else if (activeTool === 'bomb' || activeTool === 'torch') {
+          densitySlider.value = 1;
+        } else {
+          densitySlider.value = 8;
+        }
+      });
+    });
+
+    // ── Pour ──────────────────────────────────────────────────────────────────
+    let mx = -1, my = -1;
+    let mouseIsDown = false;
+
+    function pour() {
+      if (mx < 0) return;
+      audio.init(); 
+      // Sand pours on hover initially. After menu clicked, ALL tools require click-and-hold
+      if (!mouseIsDown) {
+        if (activeTool === 'sand' && !hasClickedMenu) {
+          // Allow initial hover pour
+        } else {
+          return; // Require mousedown otherwise
+        }
+      }
+      const mc = Math.floor(mx / CELL);
+      const mr = Math.floor(my / CELL);
+
+      // Creature: spawn exactly one per click
+      if (activeTool === 'creature' || activeTool === 'cat') {
+        if (!creatureSpawnedThisClick && mouseIsDown) {
+          if (activeTool === 'creature') {
+            creatures.push({ c: mc, r: mr, dir: Math.random() < 0.5 ? -1 : 1, walkFrame: 0, alive: true, infected: false, infectTimer: 0 });
+          } else {
+            cats.push({ c: mc, r: mr, dir: Math.random() < 0.5 ? -1 : 1, walkFrame: 0, alive: true, climbingAngle: 0 });
+          }
+          creatureSpawnedThisClick = true;
+        }
+        return;
+      }
+
+      if (activeTool === 'bomb') {
+        if (bombCooldown > 0) { bombCooldown--; return; }
+        // Place bomb as a filled circle, size based on slider
+        // Scaling for 2px: double the visual radius
+        const bombVisualR = Math.max(2, Math.floor(parseInt(densitySlider.value, 10) / 2.5) + 1);
+        let placed = false;
+        for (let dr = -bombVisualR; dr <= bombVisualR; dr++) {
+          for (let dc = -bombVisualR; dc <= bombVisualR; dc++) {
+            if (dc * dc + dr * dr > bombVisualR * bombVisualR) continue;
+            const bc = mc + dc, br = mr + dr;
+            if (ok(bc, br) && (free(bc, br) || grid[ci(bc, br)] === WATER)) {
+              const bi = ci(bc, br);
+              grid[bi] = BOMB; gridCol[bi] = BOMB_DIM; gridTimer[bi] = 0; // Inert until lit
+              placed = true;
+            }
+          }
+        }
+        if (placed) bombCooldown = 5; 
+        return;
+      }
+
+      if (activeTool === 'torch') {
+        audio.playTorch();
+        // Scaling for 2px: double the torch radius
+        const tr = Math.max(2, Math.floor(parseInt(densitySlider.value, 10) * 1.5));
+        for (let dr = -tr; dr <= tr; dr++) {
+          for (let dc = -tr; dc <= tr; dc++) {
+            const tc = mc + dc, trr = mr + dr;
+            if (ok(tc, trr) && !walls[ci(tc, trr)]) {
+              const ti = ci(tc, trr);
+              grid[ti] = FIRE;
+              gridCol[ti] = FIRE_BASE;
+              gridTimer[ti] = FIRE_LIFE + (Math.random() * 5 | 0);
+            }
+          }
+        }
+        return;
+      }
+
+      let type, base, cnt;
+      if (activeTool === 'water') {
+        type = WATER; base = WATER_BASE; cnt = WATER_COUNT;
+      } else if (activeTool === 'concrete') {
+        type = CONCRETE; base = CONC_BASE; cnt = CONC_COUNT;
+      } else if (activeTool === 'vine') {
+        type = VINE; base = VINE_BASE; cnt = VINE_COUNT;
+      } else {
+        type = SAND;
+        sandHue = (sandHue + 0.5) % 360;
+        base = RAINBOW_BASE + Math.floor((sandHue / 360) * RAINBOW_COUNT);
+        cnt = 3;
+      }
+
+      const rate = parseInt(densitySlider.value, 10) * 2;
+      const spread = Math.max(6, Math.floor(rate / 2));
+
+      if (activeTool === 'sand' || activeTool === 'vine') {
+        if (Math.random() < 0.2) audio.playSand();
+      } else if (activeTool === 'water') {
+        if (Math.random() < 0.1) audio.playWater();
+      }
+
+      for (let n = 0; n < rate; n++) {
+        const dc = (Math.random() * (spread * 2 + 1) | 0) - spread;
+        const dr = (Math.random() * (spread * 2 + 1) | 0) - spread;
+        
+        // SNAP TO 2x2 CLUSTER (4px CHUNK)
+        const sc = Math.floor((mc + dc) / 2) * 2;
+        const sr = Math.floor((mr + dr) / 2) * 2;
+
+        if (ok(sc, sr)) {
+          // Check if any of the 4 cells are free
+          let canPlace = false;
+          for (let r_off = 0; r_off < 2; r_off++) {
+            for (let c_off = 0; c_off < 2; c_off++) {
+              if (free(sc + c_off, sr + r_off)) { canPlace = true; break; }
+            }
+            if (canPlace) break;
+          }
+
+          if (canPlace) {
+            const col = (type === SAND) 
+              ? RAINBOW_BASE + ((Math.floor((sandHue / 360) * RAINBOW_COUNT) + (Math.random() * cnt | 0)) % RAINBOW_COUNT)
+              : (Math.random() * cnt | 0) + base;
+
+            for (let r_off = 0; r_off < 2; r_off++) {
+              for (let c_off = 0; c_off < 2; c_off++) {
+                const tc = sc + c_off, tr = sr + r_off;
+                if (ok(tc, tr) && (free(tc, tr) || (type === CONCRETE && grid[ci(tc, tr)] === WATER))) {
+                  const idx = ci(tc, tr);
+                  grid[idx] = type;
+                  gridCol[idx] = col;
+                  gridTimer[idx] = 0;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // ── Explosion ─────────────────────────────────────────────────────────────
+    function explode(bc, br, radius) {
+      audio.playExplosion();
+      const R = radius || EXPL_R;
+      grid[ci(bc, br)] = EMPTY; gridTimer[ci(bc, br)] = 0;
+      for (let dr = -R; dr <= R; dr++) {
+        for (let dc = -R; dc <= R; dc++) {
+          const d2 = dc * dc + dr * dr;
+          if (d2 > R * R) continue;
+          const tc = bc + dc, tr = br + dr;
+          if (!ok(tc, tr)) continue;
+          const ti = ci(tc, tr);
+
+          const dist = Math.sqrt(d2);
+          if (dist < R * 0.5) {
+            grid[ti] = EMPTY; gridTimer[ti] = 0;
+            walls[ti] = 0; // Destroy wall
+          } else {
+            if (!walls[ti]) { // Don't put fire inside walls unless destroyed
+              // Concrete might survive the outer edge of explosion
+              if (grid[ti] === CONCRETE && Math.random() < 0.8) continue;
+              grid[ti] = FIRE;
+              gridCol[ti] = FIRE_BASE;
+              gridTimer[ti] = Math.max(4, Math.floor(FIRE_LIFE * (1 - dist / R)) + 6);
+            }
+          }
+        }
+      }
+    }
+
+    // ── Physics ───────────────────────────────────────────────────────────────
+    function update() {
+      frameCount++;
+      // 1. Age fire and spread
+      for (let i = 0; i < grid.length; i++) {
+        if (grid[i] !== FIRE) continue;
+        const c = i % cols;
+        const r = Math.floor(i / cols);
+        const isWoodFire = gridTimer[i] > FIRE_LIFE + 20;
+        const spreadChance = isWoodFire ? 0.02 : 0.20;
+        if (Math.random() < spreadChance) {
+          for (let dr = -2; dr <= 2; dr++) {
+            for (let dc = -2; dc <= 2; dc++) {
+              if (dr === 0 && dc === 0) continue;
+              const nc = c + dc, nr = r + dr;
+              if (ok(nc, nr)) {
+                const ni = ci(nc, nr);
+                if (grid[ni] === VINE || grid[ni] === ROOT) {
+                  const wasRoot = grid[ni] === ROOT;
+                  grid[ni] = FIRE; gridCol[ni] = FIRE_BASE;
+                  gridTimer[ni] = wasRoot ? WOOD_FIRE_LIFE + (Math.random() * 50 | 0) : FIRE_LIFE + (Math.random() * 10 | 0);
+                } else if (grid[ni] === SAND && Math.random() < 0.3) {
+                  grid[ni] = GLASS; gridCol[ni] = GLASS_BASE + (Math.random() * GLASS_COUNT | 0); gridTimer[ni] = 0;
+                }
+              }
+            }
+          }
+        }
+        if (--gridTimer[i] <= 0) {
+          grid[i] = EMPTY;
+        } else {
+          let phase = isWoodFire
+            ? Math.floor((1 - gridTimer[i] / WOOD_FIRE_LIFE) * FIRE_COUNT)
+            : Math.floor((1 - gridTimer[i] / FIRE_LIFE) * FIRE_COUNT);
+          gridCol[i] = FIRE_BASE + Math.min(Math.max(phase, 0), FIRE_COUNT - 1);
+        }
+      }
+
+      // 2. Fall physics (HYBRID 2x2)
+      for (let r = rows - 2; r >= 0; r--) {
+        const lf = Math.random() < 0.5;
+        for (let n = 0; n < cols; n++) {
+          const c = lf ? n : cols - 1 - n;
+          const i = ci(c, r);
+          if (visited[i] === frameCount) continue;
+          const t = grid[i];
+          if (t === EMPTY || t === FIRE || t === ROOT || t === VINE || t === CONCRETE) continue;
+
+          const isClusterTop = (c % 2 === 0 && r % 2 === 0 &&
+                               grid[ci(c + 1, r)] === t &&
+                               grid[ci(c, r + 1)] === t &&
+                               grid[ci(c + 1, r + 1)] === t);
+
+          if (isClusterTop) {
+            let moved = false;
+            if (free(c, r + 2) && free(c + 1, r + 2)) {
+              move(i, ci(c, r + 2)); move(ci(c+1, r), ci(c+1, r+2));
+              move(ci(c, r+1), ci(c, r+3)); move(ci(c+1, r+1), ci(c+1, r+3));
+              moved = true;
+            } else if (t === SAND || t === BOMB) {
+              const d = lf ? -2 : 2;
+              if (ok(c + d, r + 2) && free(c + d, r + 2) && free(c + d + 1, r + 2)) {
+                move(i, ci(c + d, r + 2)); move(ci(c + 1, r), ci(c + d + 1, r + 2));
+                move(ci(c, r + 1), ci(c + d, r + 3)); move(ci(c + 1, r + 1), ci(c + d + 1, r + 3));
+                moved = true;
+              } else if (ok(c - d, r + 2) && free(c - d, r + 2) && free(c - d + 1, r + 2)) {
+                move(i, ci(c - d, r + 2)); move(ci(c + 1, r), ci(c - d + 1, r + 2));
+                move(ci(c, r + 1), ci(c - d, r + 3)); move(ci(c + 1, r + 1), ci(c - d + 1, r + 3));
+                moved = true;
+              }
+            }
+            if (moved) {
+              visited[i] = visited[ci(c+1, r)] = visited[ci(c, r+1)] = visited[ci(c+1, r+1)] = frameCount;
+              continue;
+            }
+          }
+
+          if (t === SAND || t === BOMB) {
+            if (free(c, r + 1)) move(i, ci(c, r + 1));
+            else if (isWater(c, r + 1)) swap(i, ci(c, r + 1));
+          } else if (t === WATER) {
+            if (free(c, r + 1)) move(i, ci(c, r + 1));
+            else {
+              const d = Math.random() < 0.5 ? -2 : 2;
+              if (free(c + d, r)) move(i, ci(c + d, r));
+            }
+          }
+        }
+      }
+      // 3. Hydrate vines & growth
+      for (let i = 0; i < grid.length; i++) {
+        const type = grid[i];
+        if (type === WATER) {
+          const c = i % cols, r = Math.floor(i / cols);
+          const dirs = [{ dc: 0, dr: 1 }, { dc: -1, dr: 0 }, { dc: 1, dr: 0 }, { dc: 0, dr: -1 }];
+          for (const d of dirs) {
+            const nc = c + d.dc, nr = r + d.dr;
+            if (ok(nc, nr)) {
+              const ni = ci(nc, nr);
+              if (grid[ni] === VINE && gridTimer[ni] < 100) gridTimer[ni] += 20;
+            }
+          }
+        }
+      }
+
+      // 4. Tick bomb timers & vine/root growth
+      for (let i = 0; i < grid.length; i++) {
+        const type = grid[i];
+        if (type === BOMB) {
+          if (gridTimer[i] === 0) {
+            const c = i % cols, r = Math.floor(i / cols);
+            const dirs = [{dc:0, dr:1}, {dc:0, dr:-1}, {dc:1, dr:0}, {dc:-1, dr:0}];
+            for (const d of dirs) {
+              const nc = c + d.dc, nr = r + d.dr;
+              if (ok(nc, nr) && grid[ci(nc, nr)] === FIRE) { igniteCluster(i); break; }
+            }
+            continue;
+          }
+          if (--gridTimer[i] <= 0) {
+            explode(i % cols, Math.floor(i / cols), EXPL_R + parseInt(densitySlider.value, 10));
+          } else if (gridTimer[i] < 40) {
+            gridCol[i] = (Math.floor(gridTimer[i] / 5) % 2 === 0) ? BOMB_HOT : BOMB_DIM;
+          }
+        } else if (type === VINE) {
+          const isHydrated = gridTimer[i] > 0;
+          if (isHydrated && Math.random() < 0.05) gridTimer[i]--;
+          if (Math.random() < (isHydrated ? 0.2 : 0.005)) {
+            const c = i % cols, r = Math.floor(i / cols);
+            const d = Math.random() < 0.8 ? { dc: 0, dr: -1 } : { dc: Math.random() < 0.5 ? -1 : 1, dr: Math.random() < 0.5 ? -1 : 0 };
+            const nc = c + d.dc, nr = r + d.dr;
+            if (ok(nc, nr)) {
+              const ni = ci(nc, nr);
+              if (grid[ni] === EMPTY || grid[ni] === WATER) {
+                grid[ni] = VINE; gridCol[ni] = (Math.random() * VINE_COUNT | 0) + VINE_BASE;
+                gridTimer[ni] = isHydrated ? Math.max(0, gridTimer[i] - 5) : 0;
+              }
+            }
+          }
+        } else if (type === ROOT) {
+          if (Math.random() < 0.005) {
+            const rc = i % cols, rr = (i / cols) | 0;
+            const d = Math.random() < 0.8 ? { dc: 0, dr: 1 } : { dc: Math.random() < 0.5 ? -1 : 1, dr: 1 };
+            const nc = rc + d.dc, nr = rr + d.dr;
+            if (ok(nc, nr)) {
+              const ni = ci(nc, nr);
+              if (grid[ni] === VINE) {
+                grid[ni] = ROOT; gridCol[ni] = (Math.random() * ROOT_COUNT | 0) + ROOT_BASE;
+              } else if (grid[ni] === EMPTY && Math.random() < 0.3) {
+                let hasSup = false;
+                for (let sy = -1; sy <= 1; sy++) {
+                  for (let sx = -1; sx <= 1; sx++) {
+                    if (ok(nc+sx, nr+sy)) {
+                      const g = grid[ci(nc+sx, nr+sy)];
+                      if (g === VINE || g === ROOT || g === CONCRETE || walls[ci(nc+sx, nr+sy)]) hasSup = true;
+                    }
+                  }
+                }
+                if (hasSup) {
+                  if (Math.random() < 0.8) {
+                    grid[ni] = VINE; gridCol[ni] = (Math.random() * VINE_COUNT | 0) + VINE_BASE; gridTimer[ni] = 50;
+                  } else {
+                    grid[ni] = ROOT; gridCol[ni] = (Math.random() * ROOT_COUNT | 0) + ROOT_BASE;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // ── Creature AI (entity-based, not grid) ──────────────────────────────────
+    function updateCreatures() {
+      for (let i = creatures.length - 1; i >= 0; i--) {
+        const cr = creatures[i];
+        if (!cr.alive) { creatures.splice(i, 1); continue; }
+
+        // Die if out of bounds
+        if (!ok(cr.c, cr.r)) { cr.alive = false; continue; }
+
+        // Die if standing in fire
+        if (grid[ci(cr.c, cr.r)] === FIRE) { cr.alive = false; continue; }
+
+        // Eat adjacent vines (but not roots)
+        const eatDirs = [{ dc: -1, dr: 0 }, { dc: 1, dr: 0 }, { dc: 0, dr: -1 }, { dc: 0, dr: 1 }, { dc: -1, dr: -1 }, { dc: 1, dr: -1 }];
+        for (const d of eatDirs) {
+          const nc = cr.c + d.dc, nr = cr.r + d.dr;
+          if (ok(nc, nr) && grid[ci(nc, nr)] === VINE) {
+            grid[ci(nc, nr)] = EMPTY;
+          }
+        }
+
+        // Gravity: fall if nothing solid below
+        if (!solid(cr.c, cr.r + 1)) {
+          cr.r++;
+          if (cr.r >= rows) { cr.alive = false; }
+          continue; // Don't walk while falling
+        }
+
+        // --- INFECTION LOGIC ---
+        // 1% chance per second (roughly 0.00016 per frame) to randomly mutate
+        if (!cr.infected && Math.random() < 0.0002) {
+          cr.infected = true;
+          cr.infectTimer = 600; // 10 seconds
+        }
+
+        if (cr.infected) {
+          cr.infectTimer--;
+          if (cr.infectTimer <= 0) {
+            cr.alive = false;
+            continue;
+          }
+          // Seek nearest healthy creature and infect on touch
+          let nearestDist = Infinity;
+          let target = null;
+          for (const other of creatures) {
+            if (!other.alive || other.infected) continue;
+            const dx = other.c - cr.c;
+            const dy = other.r - cr.r;
+            const d2 = dx * dx + dy * dy;
+            if (d2 < 25) { // Touch radius
+              other.infected = true;
+              other.infectTimer = 600;
+            } else if (d2 < nearestDist && d2 < 40000) { // Sight radius (~200 cells)
+              nearestDist = d2;
+              target = other;
+            }
+          }
+          if (target) {
+            // override walk direction to chase
+            cr.dir = target.c > cr.c ? 1 : -1;
+          }
+        }
+
+        // Walk at a natural pace (every 3rd frame)
+        cr.walkFrame++;
+        if (cr.walkFrame % 2 !== 0) continue;
+
+        // Occasionally change direction randomly (only if not chasing something)
+        if (!cr.infected && Math.random() < 0.05) cr.dir *= -1;
+
+        const dir = cr.dir;
+        const nc = cr.c + dir;
+
+        // Try to walk forward into empty/water space
+        if (ok(nc, cr.r) && !solid(nc, cr.r)) {
+          cr.c = nc;
+          if (Math.random() < 0.2) audio.playStep();
+        }
+        // Climb 1 block: obstacle ahead but space above it
+        else if (ok(nc, cr.r) && ok(nc, cr.r - 1) && solid(nc, cr.r) && !solid(nc, cr.r - 1)) {
+          cr.c = nc;
+          cr.r = cr.r - 1;
+          if (Math.random() < 0.3) audio.playStep();
+        }
+        // Climb 2 blocks (mantle)
+        else if (ok(nc, cr.r) && ok(nc, cr.r - 1) && ok(nc, cr.r - 2)
+          && solid(nc, cr.r) && solid(nc, cr.r - 1) && !solid(nc, cr.r - 2)
+          && !solid(cr.c, cr.r - 1)) {
+          cr.c = nc;
+          cr.r = cr.r - 2;
+          if (Math.random() < 0.4) audio.playStep();
+        }
+        // Stuck: reverse direction
+        else {
+          cr.dir *= -1;
+        }
+
+        // Reproduction: if near another creature for a while, spawn a baby
+        if (cr.infected) {
+          cr.mateTimer = 0;
+          continue;
+        }
+        if (!cr.mateTimer) cr.mateTimer = 0;
+        let nearMate = false;
+        for (let j = 0; j < creatures.length; j++) {
+          if (j === i || !creatures[j].alive) continue;
+          const dx = creatures[j].c - cr.c, dy = creatures[j].r - cr.r;
+          if (dx * dx + dy * dy < 25) { nearMate = true; break; }
+        }
+        if (nearMate) {
+          cr.mateTimer++;
+          if (cr.mateTimer > 60) {
+            // Spawn baby nearby
+            const babyC = cr.c + (Math.random() < 0.5 ? -2 : 2);
+            const babyR = cr.r - 1;
+            if (ok(babyC, babyR)) {
+              audio.playUI(); // Baby pop
+              creatures.push({ c: babyC, r: babyR, dir: Math.random() < 0.5 ? -1 : 1, walkFrame: 0, alive: true, mateTimer: -120, infected: false, infectTimer: 0 });
+            }
+            cr.mateTimer = -120; // Cooldown
+          }
+        } else {
+          if (cr.mateTimer > 0) cr.mateTimer--;
+          else if (cr.mateTimer < 0) cr.mateTimer++;
+        }
+      }
+    }
+
+    function igniteCluster(startI) {
+      const stack = [startI];
+      while (stack.length > 0) {
+        const i = stack.pop();
+        if (grid[i] !== BOMB || gridTimer[i] > 0) continue;
+        gridTimer[i] = BOMB_FUSE;
+        const c = i % cols, r = Math.floor(i / cols);
+        const dirs = [{dc:0, dr:1}, {dc:0, dr:-1}, {dc:1, dr:0}, {dc:-1, dr:0}];
+        for (const d of dirs) {
+          const nc = c + d.dc, nr = r + d.dr;
+          if (ok(nc, nr)) {
+            const ni = ci(nc, nr);
+            if (grid[ni] === BOMB && gridTimer[ni] === 0) stack.push(ni);
+          }
+        }
+      }
+    }
+
+    // ── Cat AI ────────────────────────────────────────────────────────────────
+    function updateCats() {
+      for (let i = cats.length - 1; i >= 0; i--) {
+        const cat = cats[i];
+        if (!cat.alive) { cats.splice(i, 1); continue; }
+
+        // Die if out of bounds or in fire
+        if (!ok(cat.c, cat.r) || grid[ci(cat.c, cat.r)] === FIRE) { cat.alive = false; continue; }
+
+        cat.walkFrame++;
+
+        // 1. Check for vines
+        let onVine = false;
+        let vineAbove = false;
+        if (ok(cat.c, cat.r) && grid[ci(cat.c, cat.r)] === VINE) onVine = true;
+
+        // Cats are 3 blocks high, check body
+        if (ok(cat.c, cat.r - 1) && grid[ci(cat.c, cat.r - 1)] === VINE) onVine = true;
+        if (ok(cat.c, cat.r - 2) && grid[ci(cat.c, cat.r - 2)] === VINE) onVine = true;
+
+        if (ok(cat.c, cat.r - 3) && grid[ci(cat.c, cat.r - 3)] === VINE) vineAbove = true;
+
+        if (onVine && vineAbove) {
+          // Climbing logic
+          // Move up every 4th frame
+          if (cat.walkFrame % 4 === 0) {
+            cat.r--;
+            if (Math.random() < 0.4) audio.playStep();
+          }
+          if (Math.random() < 0.005) audio.playMeow();
+          // Cling mode: sway left/right slightly
+          cat.walkFrame += 1; // Faster animation while climbing
+          continue; // Skip gravity and normal walking 
+        }
+
+        // Gravity: fall if nothing solid below
+        if (!solid(cat.c, cat.r + 1)) {
+          cat.r++;
+          if (cat.r >= rows) { cat.alive = false; }
+          if (cat.r < rows && grid[ci(cat.c, cat.r + 1)] === VINE) {
+            // Landed on a vine!
+          }
+          continue; // Don't walk while falling
+        }
+
+        // Walk Every Frame for 2px resolution
+        if (cat.walkFrame % 1 !== 0) continue;
+
+        if (Math.random() < 0.05) cat.dir *= -1;
+
+        const dir = cat.dir;
+        const nc = cat.c + dir;
+
+        // Jump mechanics
+        if (ok(nc, cr = cat.r) && !solid(nc, cr)) {
+          cat.c = nc;
+          if (Math.random() < 0.2) audio.playStep();
+        } else if (ok(nc, cr) && ok(nc, cr - 1) && ok(nc, cr - 2) && ok(nc, cr - 3)) {
+          if (!solid(nc, cr - 1)) { cat.c = nc; cat.r = cr - 1; audio.playStep(); } 
+          else if (!solid(nc, cr - 2) && !solid(cat.c, cr - 1)) { cat.c = nc; cat.r = cr - 2; audio.playStep(); }
+          else if (!solid(nc, cr - 3) && !solid(cat.c, cr - 1) && !solid(cat.c, cr - 2)) { cat.c = nc; cat.r = cr - 3; audio.playStep(); }
+          else cat.dir *= -1;
+        } else {
+          cat.dir *= -1;
+        }
+        if (Math.random() < 0.002) audio.playMeow();
+      }
+    }
+
+    // ── Render ────────────────────────────────────────────────────────────────
+    function render() {
+      imgBuf.fill(C_BG);
+
+      // 1. Draw grid particles (walls, sand, water, vines, concrete, fire, bombs)
+      const C_HIGHLIGHT = u32('#B12F4F');
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const i = ci(c, r);
+          if (walls[i]) {
+            const navIdx = wallNavID[i];
+            const col = (navIdx !== -1 && navIdx === hoveredNavIndex) ? C_HIGHLIGHT : C_WALL;
+            for (let py = 0; py < CELL; py++) {
+              const base = (r * CELL + py) * canvas.width + c * CELL;
+              for (let pxc = 0; pxc < CELL; pxc++) imgBuf[base + pxc] = col;
+            }
+          } else if (grid[i]) {
+            const t = grid[i];
+            const col = PALETTE[gridCol[i]];
+            if (t === FIRE || t === VINE || t === ROOT) {
+              // Draw at 2px resolution
+              for (let py = 0; py < CELL; py++) {
+                const base = (r * CELL + py) * canvas.width + c * CELL;
+                for (let pxc = 0; pxc < CELL; pxc++) imgBuf[base + pxc] = col;
+              }
+            } else if (c % 2 === 0 && r % 2 === 0) {
+              // Draw 2x2 clusters as 4x4 pixels
+              for (let py = 0; py < CELL * 2; py++) {
+                const base = (r * CELL + py) * canvas.width + c * CELL;
+                for (let pxc = 0; pxc < CELL * 2; pxc++) {
+                   if (c * CELL + pxc < canvas.width && r * CELL + py < canvas.height) {
+                     imgBuf[base + pxc] = col;
+                   }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // 2. Draw creatures as stick figures + update counter
+      let activeCreatures = 0;
+      for (const cr of creatures) {
+        if (!cr.alive) continue;
+        activeCreatures++;
+        const bugCol = cr.infected ? PALETTE[INFECTED_BASE] : PALETTE[CREATURE_BASE];
+        const px = cr.c * CELL;
+        const py = cr.r * CELL;
+
+        // Stick figure: 3 wide × 5 tall cells
+        // [head] [arms+torso] [body] [body] [legs]
+        const shape = [
+          [0, 1, 0],
+          [1, 1, 1],
+          [0, 1, 0],
+          [0, 1, 0],
+          [1, 0, 1]
+        ];
+
+        // Animate legs for walking
+        const wc = cr.walkFrame % 4;
+        if (wc === 0) shape[4][0] = 0;
+        else if (wc === 2) shape[4][2] = 0;
+
+        // Offset so feet are at creature's grid position
+        const ox = px - CELL;
+        const oy = py - 4 * CELL;
+
+        for (let sy = 0; sy < 5; sy++) {
+          for (let sx = 0; sx < 3; sx++) {
+            if (!shape[sy][sx]) continue;
+            // Draw each segment as 2x2 simulation cells (4x4 pixels total)
+            for (let dy = 0; dy < CELL * 2; dy++) {
+              for (let dx = 0; dx < CELL * 2; dx++) {
+                const fx = ox + sx * CELL * 2 + dx;
+                const fy = oy + sy * CELL * 2 + dy;
+                if (fx >= 0 && fx < canvas.width && fy >= 0 && fy < canvas.height) {
+                  imgBuf[fy * canvas.width + fx] = bugCol;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // 3. Draw cats
+      const orangeCol = PALETTE[CAT_BASE];
+      let activeCats = 0;
+      for (const cat of cats) {
+        if (!cat.alive) continue;
+        activeCats++;
+        const px = cat.c * CELL;
+        const py = cat.r * CELL;
+
+        // Cat shape (5x4) (facing right)
+        // [tail] [ ] [ ] [ears] [ears]
+        // [tail] [back] [body] [head] [snout]
+        // [ ] [leg] [body] [leg] [ ]
+
+        let shape;
+        if (cat.dir === 1) { // Facing right
+          shape = [
+            [1, 0, 0, 1, 1], // ears/tail up
+            [1, 1, 1, 1, 0], // back/head
+            [0, 1, 1, 1, 0], // belly
+            [0, 1, 0, 1, 0]  // legs
+          ];
+          // Animate legs
+          const wc = Math.floor(cat.walkFrame / 2) % 4;
+          if (wc === 0) { shape[3][1] = 0; shape[3][3] = 1; }
+          else if (wc === 2) { shape[3][1] = 1; shape[3][3] = 0; }
+        } else { // Facing left
+          shape = [
+            [1, 1, 0, 0, 1],
+            [0, 1, 1, 1, 1],
+            [0, 1, 1, 1, 0],
+            [0, 1, 0, 1, 0]
+          ];
+          const wc = Math.floor(cat.walkFrame / 2) % 4;
+          if (wc === 0) { shape[3][1] = 1; shape[3][3] = 0; }
+          else if (wc === 2) { shape[3][1] = 0; shape[3][3] = 1; }
+        }
+
+        const ox = px - 2 * CELL;
+        const oy = py - 3 * CELL;
+
+        for (let sy = 0; sy < 4; sy++) {
+          for (let sx = 0; sx < 5; sx++) {
+            if (!shape[sy][sx]) continue;
+            // Draw each segment as 2x2 simulation cells (4x4 pixels total)
+            for (let dy = 0; dy < CELL * 2; dy++) {
+              for (let dx = 0; dx < CELL * 2; dx++) {
+                const fx = ox + sx * CELL * 2 + dx;
+                const fy = oy + sy * CELL * 2 + dy;
+                if (fx >= 0 && fx < canvas.width && fy >= 0 && fy < canvas.height) {
+                  imgBuf[fy * canvas.width + fx] = orangeCol;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // Update UI counter
+      const counterEl = document.getElementById('creature-count');
+      if (counterEl) {
+        counterEl.innerText = `(${activeCreatures})`;
+      }
+      const catCounterEl = document.getElementById('cat-count');
+      if (catCounterEl) {
+        catCounterEl.innerText = `(${activeCats})`;
+      }
+
+      ctx.putImageData(imgData, 0, 0);
+    }
+
+    // ── Background Web Worker Timer ───────────────────────────────────────────
+    // Browsers throttle requestAnimationFrame and setInterval when tabs are inactive.
+    // By keeping the timer in a Web Worker, it bypasses the tab throttling so the simulation
+    // continues running unabated in the background!
+    const workerCode = `
+      let interval;
+      self.onmessage = function(e) {
+        if (e.data === 'start') {
+          interval = setInterval(() => self.postMessage('tick'), 16);
+        } else if (e.data === 'stop') {
+          clearInterval(interval);
+        }
+      };
+    `;
+    const blob = new Blob([workerCode], { type: 'application/javascript' });
+    const worker = new Worker(URL.createObjectURL(blob));
+
+    function loop() {
+      pour();
+      update();
+      updateCreatures();
+      updateCats();
+      render();
+    }
+
+    worker.onmessage = loop;
+
+    // Use touch events as well
+    function updateMouse(e) {
+      const rect = canvas.getBoundingClientRect();
+      mx = (e.clientX || (e.touches && e.touches[0].clientX) || -1);
+      my = (e.clientY || (e.touches && e.touches[0].clientY) || -1);
+      
+      const realX = mx - rect.left;
+      const realY = my - rect.top;
+
+      hoveredNavIndex = -1;
+      for (let i = 0; i < navItems.length; i++) {
+        const item = navItems[i];
+        if (realX >= item.x && realX <= item.x + item.w && 
+            realY >= item.y && realY <= item.y + item.h) {
+          
+          // Check if wall is intact here
+          const mc = Math.floor(realX / CELL);
+          const mr = Math.floor(realY / CELL);
+          if (ok(mc, mr) && walls[ci(mc, mr)]) {
+            hoveredNavIndex = i;
+            canvas.style.cursor = 'pointer';
+            return;
+          }
+        }
+      }
+      canvas.style.cursor = 'default';
+    }
+    function clearMouse() { mx = -1; my = -1; mouseIsDown = false; }
+
+    canvas.addEventListener('mousemove', updateMouse);
+    canvas.addEventListener('touchmove', updateMouse, { passive: true });
+    canvas.addEventListener('mousedown', function (e) {
+      mouseIsDown = true;
+      creatureSpawnedThisClick = false;
+      updateMouse(e);
+      audio.init();
+
+      // Check for nav link clicks
+      const rect = canvas.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const clickY = e.clientY - rect.top;
+
+      for (const item of navItems) {
+        if (clickX >= item.x && clickX <= item.x + item.w &&
+          clickY >= item.y && clickY <= item.y + item.h) {
+
+          // Check if at least some of the wall at this location is still intact
+          const mc = Math.floor(clickX / CELL);
+          const mr = Math.floor(clickY / CELL);
+          let intact = false;
+          // Look at a small neighborhood
+          for (let dr = -2; dr <= 2; dr++) {
+            for (let dc = -2; dc <= 2; dc++) {
+              if (ok(mc + dc, mr + dr) && walls[ci(mc + dc, mr + dr)]) {
+                intact = true;
+                break;
+              }
+            }
+            if (intact) break;
+          }
+
+          if (intact) {
+            audio.playUI();
+            window.location.href = item.url;
+            return;
+          }
+        }
+      }
+    });
+
+    function handleTouch(e) {
+      mouseIsDown = true;
+      creatureSpawnedThisClick = false;
+      updateMouse(e);
+      audio.init();
+
+      const rect = canvas.getBoundingClientRect();
+      const touch = e.touches[0];
+      const clickX = touch.clientX - rect.left;
+      const clickY = touch.clientY - rect.top;
+
+      for (const item of navItems) {
+        if (clickX >= item.x && clickX <= item.x + item.w &&
+          clickY >= item.y && clickY <= item.y + item.h) {
+
+          const mc = Math.floor(clickX / CELL);
+          const mr = Math.floor(clickY / CELL);
+          let intact = false;
+          for (let dr = -2; dr <= 2; dr++) {
+            for (let dc = -2; dc <= 2; dc++) {
+              if (ok(mc + dc, mr + dr) && walls[ci(mc + dc, mr + dr)]) {
+                intact = true;
+                break;
+              }
+            }
+            if (intact) break;
+          }
+
+          if (intact) {
+            audio.playUI();
+            window.location.href = item.url;
+            return;
+          }
+        }
+      }
+    }
+
+    canvas.addEventListener('touchstart', handleTouch, { passive: false });
+    canvas.addEventListener('mouseleave', clearMouse);
+    canvas.addEventListener('mouseup', clearMouse);
+    canvas.addEventListener('touchend', clearMouse);
+
+    window.addEventListener('resize', resize);
+
+    resize();
+    worker.postMessage('start');
+  </script>
+</body>
+
+</html>

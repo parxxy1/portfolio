@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <title>Work — Parker Bryan</title>
+  <style>
+    @font-face {
+      font-family: 'Stolzl';
+      src: local('Stolzl Bold'), local('Stolzl-Bold');
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Stolzl';
+      src: local('Stolzl Medium'), local('Stolzl-Medium');
+      font-weight: 500;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Stolzl';
+      src: local('Stolzl Book'), local('Stolzl-Book');
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Stolzl';
+      src: local('Stolzl Light'), local('Stolzl-Light');
+      font-weight: 300;
+      font-style: normal;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: #fdffff;
+      font-family: 'Stolzl', sans-serif;
+      color: #434343;
+      line-height: 1.216;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .page {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 29px 49px 100px;
+      display: flex;
+      flex-direction: column;
+      gap: 60px;
+    }
+
+    /* ── Top Bar ─────────────────────────────────────────── */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .home-link {
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: -2.56px;
+      color: #43291f;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .home-link:hover {
+      opacity: 0.7;
+    }
+
+    nav {
+      display: flex;
+      gap: 40px;
+    }
+
+    nav a {
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: -2.56px;
+      color: #43291f;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    nav a:hover {
+      opacity: 0.7;
+    }
+
+    /* ── Hero ─────────────────────────────────────────────── */
+    .work-hero {
+      margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .work-hero h1 {
+      font-size: 96px;
+      font-weight: 700;
+      letter-spacing: -5.12px;
+      color: #43291f;
+      line-height: 0.8;
+      margin: 0;
+    }
+
+    .work-stats {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -1.04px;
+      color: #43291f;
+      line-height: 1.216;
+    }
+
+    /* ── Case Study List ──────────────────────────────────── */
+    .project-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .divider {
+      height: 3px;
+      background: #d9d9d9;
+      width: 100%;
+      margin: 20px 0;
+    }
+
+    .project {
+      display: flex;
+      align-items: center;
+      gap: 50px;
+      padding: 36px 0;
+    }
+
+    /* Clickable project row wrapper */
+    a.project-link {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      transition: opacity 0.2s;
+    }
+
+    a.project-link:hover {
+      opacity: 0.75;
+    }
+
+    .project-media {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 220px;
+      position: relative;
+      overflow: visible;
+    }
+
+    .project-content {
+      flex: 1.5;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      text-align: center;
+    }
+
+    .project-title {
+      font-size: 42px;
+      font-weight: 700;
+      letter-spacing: -1.68px;
+      color: #010101;
+      text-align: center;
+    }
+
+    .project-subtitle {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.64px;
+      color: #686868;
+      text-align: center;
+    }
+
+    .project-description {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.6px;
+      color: #000;
+      max-width: 680px;
+    }
+
+    .project-description p {
+      margin-bottom: 10px;
+    }
+
+    .project-description ul {
+      list-style: none;
+    }
+
+    .project-description li::before {
+      content: "· ";
+    }
+
+    /* Specific project colors */
+    .argo .project-title,
+    .argo .project-subtitle,
+    .argo .project-description {
+      color: #fb7a1f;
+    }
+
+    .playhouse .project-title,
+    .playhouse .project-subtitle,
+    .playhouse .project-description {
+      color: #b12f4f;
+    }
+
+    .pxgames .project-title,
+    .pxgames .project-subtitle,
+    .pxgames .project-description {
+      color: #ea4949;
+    }
+
+    .root .project-title,
+    .root .project-subtitle,
+    .root .project-description {
+      color: #9d7e67;
+    }
+
+    .carai .project-title,
+    .carai .project-subtitle,
+    .carai .project-description {
+      color: #3f934f;
+    }
+
+    /* ── Mockup containers ────────────────────────────────── */
+
+    /* Generic flex mockup row */
+    .overlapping-mockups {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    /* Crop-box: clips image like Figma's overflow:hidden frame */
+    .crop-box {
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .crop-box img {
+      position: absolute;
+      max-width: none;
+      pointer-events: none;
+    }
+
+    /* ── Blankmind: two overlapping phones ── */
+    .b-phone-1 {
+      width: 191px;
+      height: 237px;
+      z-index: 2;
+      margin-right: -7px;
+    }
+
+    .b-phone-2 {
+      width: 169px;
+      height: 221px;
+      z-index: 1;
+    }
+
+    /* ── Argo: single wide phone group ── */
+    .argo-mockups {
+      align-items: flex-end;
+    }
+
+    .argo-mockup-img {
+      width: 407px;
+      height: 244px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    /* ── Playhouse: logo crop ── */
+    .playhouse-mockups {
+      align-items: flex-end;
+    }
+
+    .playhouse-logo-box {
+      width: 358px;
+      height: 233px;
+    }
+
+    /* ── PxGames: logo behind laptop ── */
+    .pxgames-mockups {
+      align-items: center;
+      position: relative;
+    }
+
+    .p-logo-box {
+      width: 282px;
+      height: 71px;
+      z-index: 1;
+      margin-right: -65px;
+      flex-shrink: 0;
+    }
+
+    .p-laptop-box {
+      width: 227px;
+      height: 170px;
+      flex-shrink: 0;
+      z-index: 2;
+    }
+
+    /* ── Root: laptop + phone ── */
+    .root-mockups {
+      align-items: center;
+      gap: 16px;
+    }
+
+    .r-laptop-box {
+      width: 278px;
+      height: 257px;
+    }
+
+    .r-phone-box {
+      width: 71px;
+      height: 146px;
+      flex-shrink: 0;
+    }
+
+    /* ── Car AI: phone + interior ── */
+    .carai-mockups {
+      align-items: center;
+      gap: 16px;
+    }
+
+    .c-phone-box {
+      width: 220px;
+      height: 203px;
+      flex-shrink: 0;
+    }
+
+    .c-interior-box {
+      width: 147px;
+      height: 182px;
+      transform: rotate(180deg) scaleY(-1);
+    }
+
+    /* ── Footer ───────────────────────────────────────────── */
+    .footer {
+      display: flex;
+      justify-content: center;
+      padding: 60px 0;
+    }
+
+    .cta {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -1.12px;
+      color: #000;
+      text-decoration: none;
+    }
+
+    .cta span {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 1200px) {
+      .page {
+        padding: 29px 30px 80px;
+      }
+
+      .project {
+        flex-direction: column;
+        text-align: center;
+        gap: 30px;
+      }
+
+      .project-content {
+        align-items: center;
+      }
+
+      .work-hero h1 {
+        font-size: 64px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 20px 24px;
+      }
+
+      .home-link,
+      nav a {
+        font-size: 32px;
+      }
+
+      .work-hero h1 {
+        font-size: 48px;
+      }
+
+      .work-stats {
+        font-size: 18px;
+      }
+
+      .project-title {
+        font-size: 28px;
+      }
+
+      .project-subtitle {
+        font-size: 13px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .page {
+        padding: 16px 16px 60px;
+        gap: 40px;
+      }
+
+      .home-link,
+      nav a {
+        font-size: 24px;
+        letter-spacing: -1px;
+      }
+
+      nav {
+        gap: 16px;
+      }
+
+      .work-hero {
+        margin-top: 16px;
+      }
+
+      .work-hero h1 {
+        font-size: 64px;
+        letter-spacing: -2.56px;
+        text-align: left;
+      }
+
+      .work-stats {
+        font-size: 15px;
+        text-align: left;
+      }
+
+      .divider {
+        margin: 12px 0;
+      }
+
+      .project {
+        padding: 24px 0;
+        gap: 16px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .project-media {
+        min-height: auto;
+        justify-content: flex-start;
+        width: 100%;
+      }
+
+      .project-content {
+        width: 100%;
+        text-align: left;
+      }
+
+      .project-title {
+        font-size: 22px;
+        letter-spacing: -0.8px;
+        text-align: left !important;
+      }
+
+      .project-subtitle {
+        font-size: 12px;
+        text-align: left !important;
+      }
+
+      .project-description {
+        font-size: 13px;
+      }
+
+      .overlapping-mockups {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+      }
+
+      .b-phone-1 {
+        width: 130px;
+        height: 161px;
+        margin-right: -5px;
+      }
+
+      .b-phone-2 {
+        width: 115px;
+        height: 150px;
+      }
+
+      .argo-mockup-img {
+        width: 100%;
+        height: auto;
+        max-width: 320px;
+      }
+
+      .playhouse-logo-box {
+        width: 200px;
+        height: 130px;
+      }
+
+      .r-laptop-box {
+        width: 200px;
+        height: 185px;
+      }
+
+      .r-phone-box {
+        width: 51px;
+        height: 105px;
+      }
+
+      .root-mockups {
+        gap: 8px;
+      }
+
+      .c-phone-box {
+        width: 155px;
+        height: 143px;
+      }
+
+      .c-interior-box {
+        width: 104px;
+        height: 128px;
+      }
+
+      .carai-mockups {
+        gap: 8px;
+      }
+
+      /* PxGames: stack logo above laptop */
+      .pxgames-mockups {
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .pxgames-mockups img {
+        width: 180px !important;
+        height: auto !important;
+        margin: 0 !important;
+      }
+
+      .p-laptop-box {
+        width: 180px !important;
+        height: auto !important;
+        aspect-ratio: 349/262;
+      }
+    }
+
+    /* ── Hamburger menu ──────────────────────────────────── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 32px;
+      height: 22px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      z-index: 300;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 100%;
+      height: 3px;
+      background: #43291f;
+      border-radius: 2px;
+    }
+
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #fdffff;
+      z-index: 250;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .mobile-nav.open {
+      display: flex;
+    }
+
+    .mobile-nav a {
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: -2.56px;
+      color: #43291f;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .mobile-nav a:hover {
+      opacity: 0.7;
+    }
+
+    .mobile-nav-close {
+      position: absolute;
+      top: 20px;
+      right: 32px;
+      font-size: 36px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #43291f;
+    }
+
+    @media (max-width: 600px) {
+      .hamburger {
+        display: flex;
+      }
+
+      nav {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <header class="top-bar">
+      <a href="index.html" class="home-link">home</a>
+      <nav>
+        <a href="work.html">work</a>
+        <a href="about.html">about</a>
+        <a href="contact.html">contact</a>
+      </nav>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </header>
+    <div class="mobile-nav" id="mobile-nav">
+      <button class="mobile-nav-close" id="mobile-nav-close">✕</button>
+      <a href="work.html">work</a>
+      <a href="about.html">about</a>
+      <a href="contact.html">contact</a>
+    </div>
+
+    <section class="work-hero">
+      <h1>work</h1>
+      <div class="work-stats">
+        <p>12 shipped projects</p>
+        <p>1200+ real users</p>
+        <p>$0 marketing spent</p>
+        <p>one fake resturant with 300K views</p>
+      </div>
+    </section>
+
+    <div class="project-list">
+
+      <!-- Blankmind Radio -->
+      <a href="blankmind.html" class="project-link">
+        <section class="project blankmind">
+          <div class="project-media">
+            <div class="overlapping-mockups">
+              <div class="crop-box b-phone-1">
+                <img src="assets/blankmind/iphone16pro_1.png" alt="Blankmind Phone 1"
+                  style="width:165.48%; height:100%; left:-32.74%; top:0; object-fit:cover;">
+              </div>
+              <div class="crop-box b-phone-2">
+                <img src="assets/blankmind/iphone16pro_2.png" alt="Blankmind Phone 2"
+                  style="width:100%; height:100%; object-fit:cover; position:absolute; inset:0;">
+              </div>
+            </div>
+          </div>
+          <div class="project-content">
+            <h2 class="project-title">blankmind radio</h2>
+            <p class="project-subtitle">Brand Design · Web Development · Marketing · Community</p>
+            <div class="project-description">
+              <p>A music discovery platform I built to share the soundtracks of my life's chapters — then opened it up
+                to everyone.</p>
+              <ul>
+                <li>1,200 views in 3 weeks</li>
+                <li>42 subscribers</li>
+                <li>$0 marketing spend</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+      </a>
+
+      <div class="divider"></div>
+
+      <!-- Root -->
+      <a href="root.html" class="project-link">
+        <section class="project root">
+          <div class="project-media">
+            <div class="overlapping-mockups root-mockups">
+              <div class="crop-box r-laptop-box">
+                <img src="assets/root/laptop.png" alt="Root Laptop"
+                  style="width:133.41%; height:100.18%; left:-18.69%; top:-0.09%;">
+              </div>
+              <div class="crop-box r-phone-box">
+                <img src="assets/root/iphone.png" alt="Root Phone"
+                  style="width:100%; height:100%; object-fit:cover; position:absolute; inset:0;">
+              </div>
+            </div>
+          </div>
+          <div class="project-content">
+            <h2 class="project-title">Root</h2>
+            <p class="project-subtitle">UX Design · Prompt Engineering · Frontend Development</p>
+            <div class="project-description">
+              <p>A therapeutic tool that asks you one question at a time until you hit the root of what you're really
+                feeling.</p>
+              <ul>
+                <li>Made testers cry.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+      </a>
+
+      <div class="divider"></div>
+
+      <!-- Car AI -->
+      <a href="carai.html" class="project-link">
+        <section class="project carai">
+          <div class="project-media">
+            <div class="overlapping-mockups carai-mockups">
+              <div class="crop-box c-phone-box">
+                <img src="assets/carai/iphone.png" alt="Car AI Phone"
+                  style="width:100%; height:100%; object-fit:cover; position:absolute; inset:0;">
+              </div>
+              <div class="crop-box c-interior-box">
+                <img src="assets/carai/interior.png" alt="Car AI Interior"
+                  style="width:115.93%; height:124.8%; left:-15.93%; top:-12.4%;">
+              </div>
+            </div>
+          </div>
+          <div class="project-content">
+            <h2 class="project-title">Car AI</h2>
+            <p class="project-subtitle">Hardware · iOS Development · API Integration · 3D Printing</p>
+            <div class="project-description">
+              <p>I soldered, 3D-printed, and coded a hands-free AI voice assistant for my car.</p>
+              <ul>
+                <li>3 APIs connected</li>
+                <li>Built in 1 week</li>
+                <li>Used daily</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+      </a>
+
+      <div class="divider"></div>
+
+      <!-- Playhouse -->
+      <a href="playhouse.html" class="project-link">
+        <section class="project playhouse">
+          <div class="project-media">
+            <div class="overlapping-mockups playhouse-mockups">
+              <div class="crop-box playhouse-logo-box">
+                <img src="assets/playhouse/project_logo.png" alt="Playhouse Logo"
+                  style="width:100%; height:153.6%; left:0; top:-26.53%;">
+              </div>
+            </div>
+          </div>
+          <div class="project-content">
+            <h2 class="project-title">Parker Birwin's Playhouse</h2>
+            <p class="project-subtitle">Brand Design · Creative Campaign · Graphic Design</p>
+            <div class="project-description">
+              <p>A fake restaurant I designed at 16 that became one of the top-rated spots in town before Google shut it
+                down.</p>
+              <ul>
+                <li>4.8-star google rating</li>
+                <li>300K TikTok views</li>
+                <li>200+ phone calls</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+      </a>
+
+      <div class="divider"></div>
+
+      <!-- Argo -->
+      <a href="argo.html" class="project-link">
+        <section class="project argo">
+          <div class="project-media">
+            <div class="overlapping-mockups argo-mockups">
+              <img src="assets/argo/phone_mockups.png" alt="Argo Mockup" class="argo-mockup-img">
+            </div>
+          </div>
+          <div class="project-content">
+            <h2 class="project-title">Argo: Digital Graffiti</h2>
+            <p class="project-subtitle">AR Prototyping · Frontend Design · 3D Scanning</p>
+            <div class="project-description">
+              <p>A persistent AR experience built in 24 hours — leave 3D art in a real space for others to discover.</p>
+              <ul>
+                <li>Built in a 24-hour sprint</li>
+                <li>Won 3rd place</li>
+                <li>Invited to present</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+      </a>
+
+      <div class="divider"></div>
+
+      <!-- PxGames -->
+      <section class="project pxgames">
+        <div class="project-media">
+          <div class="overlapping-mockups pxgames-mockups">
+            <img src="assets/pxgames/pxgamelogo.png" alt="PxGames Logo"
+              style="width:282px; height:71px; object-fit:contain; z-index:1; margin-right:-65px; flex-shrink:0;">
+            <div class="crop-box p-laptop-box" style="z-index:2;">
+              <img src="assets/pxgames/macbook.png" alt="PxGames Laptop"
+                style="width:100%; height:100%; object-fit:cover; position:absolute; inset:0;">
+            </div>
+          </div>
+        </div>
+        <div class="project-content">
+          <h2 class="project-title">PxGames</h2>
+          <p class="project-subtitle">Web Development · Community Building · Event Organizing</p>
+          <div class="project-description">
+            <p>A gaming platform I built at 14 when my school blocked every game site. It became the only one that
+              mattered.</p>
+            <ul>
+              <li>400 users</li>
+              <li>4,000+ views</li>
+              <li>4 years running</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <div class="divider"></div>
+    </div>
+
+    <footer class="footer">
+      <a href="contact.html" class="cta">want to see more? <span>get in touch :)</span></a>
+    </footer>
+  </div>
+  <script>
+    var ham = document.getElementById('hamburger');
+    var mobileNav = document.getElementById('mobile-nav');
+    var closeBtn = document.getElementById('mobile-nav-close');
+    ham.addEventListener('click', function () { mobileNav.classList.add('open'); ham.style.display = 'none'; });
+    closeBtn.addEventListener('click', function () { mobileNav.classList.remove('open'); ham.style.display = ''; });
+  </script>
+</body>
+
+</html>

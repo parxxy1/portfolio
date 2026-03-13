@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <title>Car AI — Parker Birwin</title>
+  <meta name="description" content="Car AI: I soldered, 3D-printed, and coded a hands-free AI voice assistant for my car. Case study by Parker Birwin." />
+  <style>
+    @font-face {
+      font-family: 'Stolzl';
+      src: local('Stolzl Bold'), local('Stolzl-Bold');
+      font-weight: 700;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Stolzl';
+      src: local('Stolzl Medium'), local('Stolzl-Medium');
+      font-weight: 500;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Stolzl';
+      src: local('Stolzl Book'), local('Stolzl-Book');
+      font-weight: 400;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Stolzl';
+      src: local('Stolzl Light'), local('Stolzl-Light');
+      font-weight: 300;
+      font-style: normal;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: #fdffff;
+      font-family: 'Stolzl', sans-serif;
+      color: #434343;
+      line-height: 1.216;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Layout ────────────────────────────────────────────── */
+    .page {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 29px 49px;
+      display: flex;
+      flex-direction: column;
+      gap: 82px;
+    }
+
+    /* ── Nav ───────────────────────────────────────────────── */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .home-link {
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: -2.56px;
+      color: #43291f;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .home-link:hover { opacity: 0.7; }
+
+    nav { display: flex; gap: 40px; align-items: center; }
+
+    nav a {
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: -2.56px;
+      color: #43291f;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    nav a:hover { opacity: 0.7; }
+
+    /* ── Accent color ──────────────────────────────────────── */
+    .accent { color: #3f934f; }
+
+    /* ── Hero ──────────────────────────────────────────────── */
+    .hero {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .hero-left {
+      flex: 0 0 377px;
+      display: flex;
+      flex-direction: column;
+      gap: 17px;
+    }
+
+    .hero-left h1 {
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: -1.92px;
+      color: #3f934f;
+    }
+
+    .hero-desc {
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: -0.64px;
+      line-height: 1.34;
+      width: 410px;
+    }
+
+    .hero-stats {
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: -0.64px;
+      line-height: 1.34;
+    }
+
+    .hero-right {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+    }
+
+    /* Phone mockup: 338×312 */
+    .hero-phone {
+      width: 338px;
+      height: 312px;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-phone img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Interior: 226×280, rotated, cropped */
+    .hero-interior-wrap {
+      flex-shrink: 0;
+    }
+    .hero-interior {
+      width: 226px;
+      height: 280px;
+      position: relative;
+      overflow: hidden;
+      transform: rotate(180deg) scaleY(-1);
+    }
+    .hero-interior img {
+      position: absolute;
+      width: 115.93%;
+      height: 124.8%;
+      left: -15.93%;
+      top: -12.4%;
+    }
+
+    /* ── Text section ──────────────────────────────────────── */
+    .section {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 589px;
+    }
+
+    .section.wide { max-width: 100%; }
+
+    .section h2 {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -1.44px;
+      color: #3f934f;
+    }
+
+    .section h3 {
+      font-size: 36px;
+      font-weight: 300;
+      letter-spacing: -1.44px;
+      color: #3f934f;
+    }
+
+    .section p, .section li {
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: -0.64px;
+      line-height: 1.34;
+    }
+
+    .section ul {
+      padding-left: 20px;
+      margin-top: 0;
+    }
+
+    .section p + p { margin-top: 1em; }
+
+    /* ── Media rows ────────────────────────────────────────── */
+    /* Row: 2 hardware photos side by side */
+    .hw-row {
+      display: flex;
+      gap: 79px;
+      align-items: center;
+    }
+
+    .hw-box-1 {
+      width: 230px;
+      height: 306px;
+      flex-shrink: 0;
+      overflow: hidden;
+      position: relative;
+    }
+    .hw-box-1 img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .hw-box-2 {
+      width: 407px;
+      height: 306px;
+      flex-shrink: 0;
+      overflow: hidden;
+      position: relative;
+    }
+    .hw-box-2 img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Row: 5 LED/3D photos */
+    .led-photo-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .led-photo-box {
+      height: 276px;
+      flex-shrink: 0;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .led-photo-box img {
+      position: absolute;
+      max-width: none;
+    }
+
+    .lp1 { width: 279px; }
+    .lp1 img { inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+    .lp2 { width: 206px; }
+    .lp2 img { height: 115.09%; left: -5.39%; top: -4.32%; width: 115.3%; }
+
+    .lp3 { width: 211px; }
+    .lp3 img { height: 109.58%; left: -2.17%; top: -0.12%; width: 107.2%; }
+
+    .lp4 { width: 195px; }
+    .lp4 img { height: 115.04%; left: -22.46%; top: -5.97%; width: 122.46%; }
+
+    .lp5 { width: 204px; }
+    .lp5 img { height: 126.35%; left: -13.85%; top: 0.07%; width: 128.1%; }
+
+    /* LED states image: 779×313 */
+    .led-states-box {
+      width: 779px;
+      height: 313px;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .led-states-box img {
+      position: absolute;
+      height: 131.63%;
+      left: -6.22%;
+      top: -16.61%;
+      width: 112.57%;
+      max-width: none;
+    }
+
+    /* Row: 4 app screenshots 180×390 each */
+    .app-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .app-box {
+      width: 180px;
+      height: 390px;
+      flex-shrink: 0;
+      overflow: hidden;
+      position: relative;
+    }
+    .app-box img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Final device: 307×392 with crop */
+    .final-device-box {
+      width: 307px;
+      height: 392px;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .final-device-box img {
+      position: absolute;
+      height: 142.16%;
+      left: -30.44%;
+      top: -15.5%;
+      width: 135.92%;
+      max-width: none;
+    }
+
+    /* Final interior: 358×444, rotated */
+    .final-interior-wrap { display: flex; align-items: center; justify-content: center; }
+    .final-interior {
+      width: 358px;
+      height: 444px;
+      position: relative;
+      overflow: hidden;
+      transform: rotate(180deg) scaleY(-1);
+    }
+    .final-interior img {
+      position: absolute;
+      width: 115.93%;
+      height: 124.8%;
+      left: -15.93%;
+      top: -12.4%;
+      max-width: none;
+    }
+
+    /* ── Responsive ────────────────────────────────────────── */
+    @media (max-width: 1200px) {
+      .page { padding: 24px 40px; gap: 60px; }
+      .hero { flex-direction: column; }
+      .hero-left { width: 100%; flex: none; }
+      .hero-desc, .hero-stats { width: 100%; }
+      .hw-row, .led-photo-row, .app-row { flex-wrap: wrap; }
+      .led-states-box { width: 100%; height: auto; aspect-ratio: 779/313; }
+      .led-states-box img { position: relative; width: 100%; height: auto; left: 0; top: 0; }
+    }
+
+    @media (max-width: 768px) {
+      .page { padding: 20px 24px; gap: 48px; }
+      .home-link, nav a { font-size: 36px; }
+      .hero-left h1 { font-size: 36px; }
+      .hero-phone { width: 240px; height: 222px; }
+      .hero-interior { width: 160px; height: 200px; }
+      .hw-box-1, .hw-box-2 { width: 100%; max-width: 407px; }
+    }
+
+    /* ── Hamburger menu ──────────────────────────────────── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 32px;
+      height: 22px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      z-index: 300;
+    }
+    .hamburger span {
+      display: block;
+      width: 100%;
+      height: 3px;
+      background: #43291f;
+      border-radius: 2px;
+    }
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #fdffff;
+      z-index: 250;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a {
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: -2.56px;
+      color: #43291f;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .mobile-nav a:hover { opacity: 0.7; }
+    .mobile-nav-close {
+      position: absolute;
+      top: 20px;
+      right: 32px;
+      font-size: 36px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #43291f;
+    }
+    @media (max-width: 600px) {
+      .hamburger { display: flex; }
+      nav { display: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+
+    <!-- Nav -->
+    <header class="top-bar">
+      <a href="index.html" class="home-link">home</a>
+      <nav>
+        <a href="work.html">work</a>
+        <a href="about.html">about</a>
+        <a href="contact.html">contact</a>
+      </nav>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </header>
+    <div class="mobile-nav" id="mobile-nav">
+      <button class="mobile-nav-close" id="mobile-nav-close">✕</button>
+      <a href="work.html">work</a>
+      <a href="about.html">about</a>
+      <a href="contact.html">contact</a>
+    </div>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-left">
+        <h1>Car AI</h1>
+        <div>
+          <p class="hero-desc">I soldered, 3D-printed, and coded a hands-free AI voice assistant for my car.</p>
+          <p class="hero-stats">· 3 APIs connected · Built in 1 week · Used daily</p>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="hero-phone">
+          <img src="assets/carai/iphone.png" alt="Car AI iPhone app">
+        </div>
+        <div class="hero-interior-wrap">
+          <div class="hero-interior">
+            <img src="assets/carai/interior.png" alt="Car interior">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Overview -->
+    <section class="section">
+      <h2>Overview</h2>
+      <p>Car AI is a custom-built, hands-free voice assistant I designed and developed in spring 2026. It combines a physical hardware device I soldered and 3D-printed with a sideloaded iOS app I built in Xcode. You plug the device into your car, press a button, talk, and an AI responds out loud. No phone interaction required.</p>
+      <p>The project spans hardware design, circuit prototyping, 3D modeling, iOS development, prompt engineering, and API integration — all built to solve a specific frustration I had with using AI while driving.</p>
+    </section>
+
+    <!-- Role & Scope -->
+    <section class="section">
+      <h2>Role &amp; Scope</h2>
+      <p>Solo project. I designed the circuit, soldered the hardware, modeled and 3D-printed the case, developed the iOS app, and connected all the APIs.</p>
+    </section>
+
+    <!-- The Problem -->
+    <section class="section">
+      <h2>The Problem</h2>
+      <p>I regularly use AI voice modes — ChatGPT, Gemini, Claude — for brainstorming and thinking out loud. But using them while driving is a mess. Voice recordings cut out due to unstable connections. Transcriptions fail. Messages don't save. The experience is unreliable at exactly the moment you need it most: when your hands are on the wheel and your brain is free to think.</p>
+      <p>The workaround I'd been using was clunky: record a voice memo on my phone, wait for it to transcribe, copy the transcription, paste it into an AI app, then have the app read the response aloud. That's at least five steps involving my phone screen while driving. It worked, but it was distracting, slow, and defeated the entire purpose of a hands-free workflow.</p>
+      <p>I wanted to reduce that entire process to a single button press.</p>
+    </section>
+
+    <!-- Process: Hardware -->
+    <section class="section">
+      <h2>Process</h2>
+      <h3>The Hardware</h3>
+      <p>The physical device is built around an ESP32 microcontroller soldered to a proto board, connected to an RGB LED and a push button. The ESP32 connects to my phone over Bluetooth, acting as a Bluetooth keyboard — the phone sees it as an input device, which keeps the pairing simple and reliable.</p>
+    </section>
+
+    <!-- Hardware photos row 1 -->
+    <div class="hw-row">
+      <div class="hw-box-1">
+        <img src="assets/carai/hardware_1.png" alt="Hardware prototype">
+      </div>
+      <div class="hw-box-2">
+        <img src="assets/carai/hardware_2.png" alt="Soldered board">
+      </div>
+    </div>
+
+    <!-- Hardware text 2 -->
+    <section class="section">
+      <p>I designed the circuit myself and prototyped it on a breadboard first before soldering everything to the proto board. Once the electronics were solid, I modeled a custom case in 3D and printed it in transparent PLA. The final device is compact: just a single button on top, an LED visible through the translucent case, and a micro USB port for power. It plugs directly into the car's cigarette lighter adapter.</p>
+    </section>
+
+    <!-- 5-photo row: 3D model + LED states -->
+    <div class="led-photo-row">
+      <div class="led-photo-box lp1">
+        <img src="assets/carai/model_screenshot.png" alt="3D model screenshot">
+      </div>
+      <div class="led-photo-box lp2">
+        <img src="assets/carai/led_green.png" alt="LED green — connected">
+      </div>
+      <div class="led-photo-box lp3">
+        <img src="assets/carai/led_red.png" alt="LED red — recording">
+      </div>
+      <div class="led-photo-box lp4">
+        <img src="assets/carai/led_orange.png" alt="LED orange — processing">
+      </div>
+      <div class="led-photo-box lp5">
+        <img src="assets/carai/led_blue.png" alt="LED blue — speaking">
+      </div>
+    </div>
+
+    <!-- LED States text -->
+    <section class="section">
+      <h2>The LED States</h2>
+      <p>The RGB LED provides at-a-glance feedback so I never have to look at my phone. Each color maps to a stage in the interaction:</p>
+      <ul>
+        <li>Soft pulsing blue — searching for Bluetooth connection</li>
+        <li>Green — connected and ready for a message</li>
+        <li>Red — recording your voice</li>
+        <li>Orange — AI is processing your message</li>
+        <li>Blue — AI is speaking its response</li>
+      </ul>
+      <p>At any point during the AI's response, you can press the button to interrupt it and start a new message. The LED states make the entire system legible from your peripheral vision while driving.</p>
+    </section>
+
+    <!-- LED states photo -->
+    <div class="led-states-box">
+      <img src="assets/carai/led_states.png" alt="LED state diagram">
+    </div>
+
+    <!-- The Software -->
+    <section class="section">
+      <h2>The Software</h2>
+      <p>The iOS app is built in Xcode and side-loaded onto my phone. When the button is pressed, the app starts recording audio on-device. When the button is pressed again, the recording is transcribed using Apple's on-device speech-to-text model. The transcription is then sent to Gemini Flash 2.5, and the AI's response is spoken back through a text-to-speech model of your choice.</p>
+      <p>The app is designed to be a plug-and-play system for mixing and matching AI components. You can swap between different text-to-speech engines — Apple's on-device voices, Google's TTS API, or ElevenLabs voice models — each with different voice options and latency profiles. You can also adjust how verbose the AI's responses are through simple UI controls, rather than having to manually edit system prompts.</p>
+    </section>
+
+    <!-- App screenshots -->
+    <div class="app-row">
+      <div class="app-box">
+        <img src="assets/carai/app_screen_1.png" alt="App screen 1">
+      </div>
+      <div class="app-box">
+        <img src="assets/carai/app_screen_2.png" alt="App screen 2">
+      </div>
+      <div class="app-box">
+        <img src="assets/carai/app_screen_3.png" alt="App screen 3">
+      </div>
+      <div class="app-box">
+        <img src="assets/carai/app_screen_4.png" alt="App screen 4">
+      </div>
+    </div>
+
+    <!-- The Hardest Part -->
+    <section class="section">
+      <h2>The Hardest Part</h2>
+      <p>Getting the ESP32 and the iOS app to communicate bidirectionally over Bluetooth was the trickiest challenge. Sending button presses from the device to the app was straightforward — the ESP32 acts as a Bluetooth keyboard. But sending status updates back from the app to the ESP32, so the LED could reflect what stage the AI was in, required more configuration. That two-way communication is what makes the hardware feel responsive and connected rather than like a dumb remote.</p>
+    </section>
+
+    <!-- Key Design Decisions -->
+    <section class="section">
+      <h2>Key Design Decisions</h2>
+      <p>One button, zero screens. The entire interaction model is built around never touching your phone. One press to start talking, one press to stop. The LED tells you everything else. This constraint drove every design choice in both the hardware and software.</p>
+      <p>Swappable AI components. Rather than locking into a single speech-to-text, AI model, and text-to-speech pipeline, I built the app so each layer can be swapped independently. This means the system improves as better models become available without rebuilding anything.</p>
+      <p>On-device memory with full user control. Context is stored locally in an exportable file. No cloud dependency for personal data. You own your conversation history and can move it or wipe it whenever you want.</p>
+      <p>Peripheral-vision feedback. The LED color system was designed specifically for driving — you should be able to tell the device's state from a glance without taking your eyes off the road. Each color is distinct and each state transition is immediately legible.</p>
+    </section>
+
+    <!-- The Outcome -->
+    <section class="section">
+      <h2>The Outcome</h2>
+      <p>Car AI is fully functional and I use it as my daily driver (no pun intended). It auto-connects when I plug it into power, runs in the background on my phone, and handles everything from quick questions to long brainstorming sessions while I drive.</p>
+      <p>The difference from my previous workflow is significant. What used to require opening multiple apps, copying transcriptions, pasting text, and reading responses on a screen is now a single button press and a spoken reply. The entire interaction happens without touching my phone once.</p>
+      <p>The total cost of the hardware was minimal — an ESP32, a button, an LED, a proto board, and some transparent PLA filament. The build took about a week from initial breadboard prototype to finished, cased product.</p>
+    </section>
+
+    <!-- Final device photo -->
+    <div class="final-device-box">
+      <img src="assets/carai/final_device.png" alt="Final Car AI device">
+    </div>
+
+    <!-- Reflection -->
+    <section class="section">
+      <h2>Reflection</h2>
+      <p>Car AI is the project that best demonstrates my range. It required me to design a circuit, solder physical hardware, model and 3D-print a case, develop an iOS app, engineer AI prompts, and connect multiple APIs into a seamless pipeline — all to solve a real daily frustration.</p>
+      <p>What I'm most proud of is how invisible the technology feels when you're using it. The device just works. You press a button, you talk, you listen. The complexity is all underneath, and that's exactly where it should be. The best design doesn't draw attention to itself — it just removes friction from your life.</p>
+      <p>If I continue developing it, I'd like to explore making the hardware smaller, adding support for more AI models as the API landscape evolves, and potentially packaging it as something other people could use in their own cars.</p>
+    </section>
+
+    <!-- Final interior image -->
+    <div class="final-interior">
+      <img src="assets/carai/interior.png" alt="Car interior final">
+    </div>
+
+  </div>
+  <script>
+    var ham = document.getElementById('hamburger');
+    var mobileNav = document.getElementById('mobile-nav');
+    var closeBtn = document.getElementById('mobile-nav-close');
+    ham.addEventListener('click', function() { mobileNav.classList.add('open'); ham.style.display = 'none'; });
+    closeBtn.addEventListener('click', function() { mobileNav.classList.remove('open'); ham.style.display = ''; });
+  </script>
+</body>
+
+</html>

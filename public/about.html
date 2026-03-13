@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <title>About — Parker Birwin</title>
+  <meta name="description" content="About Parker Birwin — designer, builder, and maker of things." />
+  <style>
+    @font-face {
+      font-family: 'Stolzl';
+      src: local('Stolzl Bold'), local('Stolzl-Bold');
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Stolzl';
+      src: local('Stolzl Medium'), local('Stolzl-Medium');
+      font-weight: 500;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Stolzl';
+      src: local('Stolzl Book'), local('Stolzl-Book');
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: #fdffff;
+      font-family: 'Stolzl', sans-serif;
+      color: #43291f;
+      line-height: 1.216;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ── Layout ─────────────────────────────────────────── */
+    .page {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 20px 49px 120px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    /* ── Nav ─────────────────────────────────────────────── */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding-top: 9px;
+    }
+
+    .home-link {
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: -2.56px;
+      color: #43291f;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .home-link:hover {
+      opacity: 0.7;
+    }
+
+    nav {
+      display: flex;
+      gap: 40px;
+    }
+
+    nav a {
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: -2.56px;
+      color: #43291f;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    nav a:hover {
+      opacity: 0.7;
+    }
+
+    /* ── Body ────────────────────────────────────────────── */
+    .body-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 184px;
+      margin-top: 80px;
+      padding-left: 49px;
+    }
+
+    /* ── Left: text column ───────────────────────────────── */
+    .text-col {
+      display: flex;
+      flex-direction: column;
+      gap: 45px;
+      width: 503px;
+      flex-shrink: 0;
+    }
+
+    .page-title {
+      font-size: 96px;
+      font-weight: 700;
+      letter-spacing: -5.12px;
+      line-height: 0.85;
+      color: #43291f;
+    }
+
+    .bio {
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: -0.64px;
+      line-height: 1.34;
+      color: #43291f;
+    }
+
+    .bio p+p {
+      margin-top: 1em;
+    }
+
+    .bio strong {
+      font-weight: 500;
+    }
+
+    .resume-link {
+      display: inline-block;
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: -0.64px;
+      color: #43291f;
+      text-decoration: underline;
+      transition: opacity 0.2s;
+    }
+
+    .resume-link:hover {
+      opacity: 0.6;
+    }
+
+    /* ── Right: photo ────────────────────────────────────── */
+    .photo-col {
+      flex: 1;
+    }
+
+    .photo-col img {
+      width: 412px;
+      height: 627px;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* ── Responsive ──────────────────────────────────────── */
+    @media (max-width: 1200px) {
+      .page {
+        padding: 20px 60px 80px;
+      }
+
+      .body-row {
+        gap: 60px;
+      }
+
+      .text-col {
+        width: 100%;
+        max-width: 480px;
+      }
+
+      .photo-col img {
+        width: 320px;
+        height: auto;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .page {
+        padding: 20px 24px 60px;
+      }
+
+      .body-row {
+        flex-direction: column;
+        gap: 40px;
+        margin-top: 40px;
+        padding-left: 0;
+      }
+
+      .page-title {
+        font-size: 80px;
+      }
+
+      .text-col {
+        width: 100%;
+        max-width: none;
+      }
+
+      .photo-col img {
+        width: 100%;
+        height: auto;
+        max-width: 412px;
+      }
+
+      .home-link,
+      nav a {
+        font-size: 32px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .page {
+        padding: 20px 16px 60px;
+      }
+      .page-title {
+        font-size: 60px;
+      }
+    }
+
+    /* ── Hamburger menu ──────────────────────────────────── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 32px;
+      height: 22px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      z-index: 300;
+    }
+    .hamburger span {
+      display: block;
+      width: 100%;
+      height: 3px;
+      background: #43291f;
+      border-radius: 2px;
+    }
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #fdffff;
+      z-index: 250;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a {
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: -2.56px;
+      color: #43291f;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .mobile-nav a:hover { opacity: 0.7; }
+    .mobile-nav-close {
+      position: absolute;
+      top: 20px;
+      right: 32px;
+      font-size: 36px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #43291f;
+    }
+    @media (max-width: 600px) {
+      .hamburger { display: flex; }
+      nav { display: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <header class="top-bar">
+      <a href="index.html" class="home-link">home</a>
+      <nav>
+        <a href="work.html">work</a>
+        <a href="about.html">about</a>
+        <a href="contact.html">contact</a>
+      </nav>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </header>
+    <div class="mobile-nav" id="mobile-nav">
+      <button class="mobile-nav-close" id="mobile-nav-close">✕</button>
+      <a href="work.html">work</a>
+      <a href="about.html">about</a>
+      <a href="contact.html">contact</a>
+    </div>
+
+    <div class="body-row">
+      <div class="text-col">
+        <h1 class="page-title">about</h1>
+        <div class="bio">
+          <p><strong>Hi, I'm Parker.</strong><br>
+            I've been making things for as long as I can remember. It started with building games for my brothers as a
+            kid, and it never really stopped. Something about creating a thing and watching someone interact with it
+            just never gets old.</p>
+          <p>I studied psychology because the human experience fascinated me. I went in thinking I'd be a therapist, and
+            somewhere along the way I realized I could use that same curiosity about people in a different way. I don't
+            think of myself strictly as a designer — I'm someone who loves making things and putting them into the
+            world, and right now, design is the medium I'm most excited about.</p>
+          <p>I tend to follow whatever I find interesting, and my work reflects that. I've built websites, brands,
+            hardware, games, community platforms, tools that make people cry and fake restaurants that make people
+            laugh. The through line isn't a discipline — it's the desire to make something that someone else gets to
+            experience.</p>
+          <p>I'm looking for a small, collaborative team where people care about what they're making. Portland and
+            Seattle are at the top of my list, but the right people matter more than the right city.</p>
+        </div>
+        <a href="#" class="resume-link">Download Resume</a>
+      </div>
+
+      <div class="photo-col">
+        <img src="assets/parker_photo.png" alt="Parker Birwin">
+      </div>
+    </div>
+  </div>
+  <script>
+    var ham = document.getElementById('hamburger');
+    var mobileNav = document.getElementById('mobile-nav');
+    var closeBtn = document.getElementById('mobile-nav-close');
+    ham.addEventListener('click', function() { mobileNav.classList.add('open'); ham.style.display = 'none'; });
+    closeBtn.addEventListener('click', function() { mobileNav.classList.remove('open'); ham.style.display = ''; });
+  </script>
+</body>
+
+</html>

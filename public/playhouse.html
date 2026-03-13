@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <title>Playhouse — Parker Birwin</title>
+  <meta name="description"
+    content="Parker Birwin's Playhouse: A fake restaurant I designed at 16 that became one of the top-rated spots in town. Case study by Parker." />
+  <style>
+    @font-face {
+      font-family: 'Stolzl';
+      src: local('Stolzl Bold'), local('Stolzl-Bold');
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Stolzl';
+      src: local('Stolzl Medium'), local('Stolzl-Medium');
+      font-weight: 500;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Stolzl';
+      src: local('Stolzl Book'), local('Stolzl-Book');
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Stolzl';
+      src: local('Stolzl Light'), local('Stolzl-Light');
+      font-weight: 300;
+      font-style: normal;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: #fdffff;
+      font-family: 'Stolzl', sans-serif;
+      color: #434343;
+      line-height: 1.216;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .page {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 29px 49px 300px;
+      /* Added 300px bottom padding */
+      display: flex;
+      flex-direction: column;
+      gap: 82px;
+    }
+
+    /* ── Top nav ──────────────────────────────────────────── */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .top-bar .home-link {
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: -2.56px;
+      color: #43291f;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .top-bar .home-link:hover {
+      opacity: 0.7;
+    }
+
+    nav {
+      display: flex;
+      gap: 40px;
+      align-items: center;
+    }
+
+    nav a {
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: -2.56px;
+      color: #43291f;
+      text-decoration: none;
+      line-height: 1.216;
+      transition: opacity 0.2s;
+    }
+
+    nav a:hover {
+      opacity: 0.7;
+    }
+
+    /* ── Hero ─────────────────────────────────────────────── */
+    .hero {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      width: 100%;
+    }
+
+    .hero-left {
+      flex: 0 0 377px;
+      display: flex;
+      flex-direction: column;
+      gap: 17px;
+      justify-content: center;
+    }
+
+    .hero-left h1 {
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: -2.56px;
+      color: #b12f4f;
+      /* Playhouse Red */
+      line-height: 1.1;
+      width: 542px;
+    }
+
+    .hero-details {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .hero-details .desc {
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: -0.64px;
+      line-height: 1.34;
+      width: 410px;
+    }
+
+    .hero-details .stats {
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: -0.64px;
+      line-height: 1.34;
+      width: 413px;
+    }
+
+    .hero-right {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .hero-right .logo-wrap {
+      width: 551px;
+      height: 358px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero-right .logo-wrap img {
+      position: absolute;
+      width: 100%;
+      height: 153.6%;
+      left: 0;
+      top: -26.53%;
+      object-fit: cover;
+    }
+
+    /* ── Text sections ────────────────────────────────────── */
+    .section {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .section h2 {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -1.44px;
+      line-height: 1.216;
+      color: #b12f4f;
+    }
+
+    .section h3 {
+      font-size: 36px;
+      font-weight: 300;
+      letter-spacing: -1.44px;
+      line-height: 1.216;
+      color: #b12f4f;
+    }
+
+    .section p,
+    .section .body-text {
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: -0.64px;
+      line-height: 1.34;
+      max-width: 100%;
+    }
+
+    /* ── Menu Section ─────────────────────────────────────── */
+    .menu-wrap {
+      width: 336px;
+      height: 473px;
+      position: relative;
+    }
+
+    .menu-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ── Review Grid ──────────────────────────────────────── */
+    .review-row {
+      display: flex;
+      align-items: center;
+      gap: -6px;
+      /* Overlap between columns */
+      width: 900px;
+    }
+
+    .review-main {
+      width: 236px;
+      height: 119px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .review-main img {
+      position: absolute;
+      width: 219.72%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      max-width: none;
+    }
+
+    .review-stack {
+      display: flex;
+      gap: 0px;
+    }
+
+    .review-col {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .review-col img {
+      object-fit: cover;
+    }
+
+    /* ── TikTok Grids ─────────────────────────────────────── */
+    .screenshot-row {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .screenshot-row img {
+      width: auto;
+      height: auto;
+      object-fit: cover;
+    }
+
+    .tiktok-grid-1 {
+      width: 1075px;
+      height: 287px;
+      overflow: hidden;
+      display: flex;
+      gap: -15px;
+      /* Overlap requested by user */
+    }
+
+    .tiktok-grid-1 img {
+      width: 220px;
+      height: 345x;
+      border-radius: 8px;
+      /* Subtle radius for overlaps to look better */
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .tiktok-grid-2 {
+      width: 988px;
+      height: 426px;
+      display: flex;
+      gap: -15px;
+      /* Overlap requested by user */
+    }
+
+    .tiktok-grid-2 img {
+      width: 239px;
+      height: 424px;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    /* ── Banned Section ───────────────────────────────────── */
+    .banned-wrap {
+      width: 543px;
+      height: 426px;
+      position: relative;
+    }
+
+    .banned-wrap img {
+      width: 695px;
+      height: 524px;
+      object-fit: cover;
+    }
+
+    /* ── Design Section ───────────────────────────────────── */
+    .website-wrap {
+      width: 828px;
+      height: 473px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .website-wrap img {
+      position: absolute;
+      width: 100.41%;
+      height: 100.63%;
+      left: -0.21%;
+      top: -0.21%;
+      max-width: none;
+    }
+
+    /* ── Utility ──────────────────────────────────────────── */
+    .spaced-paragraphs p+p {
+      margin-top: 1.2em;
+    }
+
+    .limited-width {
+      max-width: 566px !important;
+    }
+
+    /* ── Responsive ──────────────────────────────────────── */
+    @media (max-width: 1200px) {
+      .page {
+        padding: 24px 60px;
+        gap: 60px;
+      }
+
+      .hero {
+        flex-direction: column;
+        gap: 40px;
+      }
+
+      .hero-left {
+        width: 100%;
+        flex: none;
+      }
+
+      .hero-left h1 {
+        width: 100%;
+      }
+
+      .hero-right .logo-wrap {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 551 / 358;
+      }
+
+      .review-row,
+      .tiktok-grid-1,
+      .tiktok-grid-2,
+      .screenshot-row {
+        width: 100%;
+        flex-wrap: wrap;
+        height: auto;
+      }
+
+      .review-row img,
+      .tiktok-grid-1 img,
+      .tiktok-grid-2 img {
+        width: 48%;
+        height: auto;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 20px 24px;
+        gap: 48px;
+      }
+
+      .top-bar .home-link,
+      nav a {
+        font-size: 32px;
+      }
+    }
+
+    /* ── Hamburger menu ──────────────────────────────────── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 32px;
+      height: 22px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      z-index: 300;
+    }
+    .hamburger span {
+      display: block;
+      width: 100%;
+      height: 3px;
+      background: #43291f;
+      border-radius: 2px;
+    }
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #fdffff;
+      z-index: 250;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a {
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: -2.56px;
+      color: #43291f;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .mobile-nav a:hover { opacity: 0.7; }
+    .mobile-nav-close {
+      position: absolute;
+      top: 20px;
+      right: 32px;
+      font-size: 36px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #43291f;
+    }
+    @media (max-width: 600px) {
+      .hamburger { display: flex; }
+      nav { display: none; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="page">
+
+    <!-- ═══ Nav ═══ -->
+    <header class="top-bar">
+      <a href="index.html" class="home-link">home</a>
+      <nav>
+        <a href="work.html">work</a>
+        <a href="about.html">about</a>
+        <a href="contact.html">contact</a>
+      </nav>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </header>
+    <div class="mobile-nav" id="mobile-nav">
+      <button class="mobile-nav-close" id="mobile-nav-close">✕</button>
+      <a href="work.html">work</a>
+      <a href="about.html">about</a>
+      <a href="contact.html">contact</a>
+    </div>
+
+    <!-- ═══ Hero ═══ -->
+    <section class="hero">
+      <div class="hero-left">
+        <h1>Parker Birwin's Playhouse</h1>
+        <div class="hero-details">
+          <p class="desc">A fake restaurant I designed at 16 that became one of the top-rated spots in town before
+            Google shut it down.</p>
+          <p class="stats">· 4.8-star google rating · 300K TikTok views · 200+ phone calls</p>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="logo-wrap">
+          <img src="assets/playhouse/project_logo.png" alt="Parker Birwin's Playhouse Logo" />
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ Overview ═══ -->
+    <section class="section">
+      <h2>Overview</h2>
+      <div class="body-text spaced-paragraphs">
+        <p>In 2020, when I was 16, I created a fake restaurant called Parker Birwin’s Playhouse. I built a Google Maps
+          listing, designed a full brand identity with a logo, menu, and website, created merch, and set the address to
+          my high school in Spanish Fork, Utah. What started as a joke turned into a viral local phenomenon — the
+          listing earned a 4.8-star rating, became one of the top-rated restaurants in town, generated over 200 phone
+          calls from people trying to place orders, and racked up roughly 300,000 views through TikTok alone.</p>
+        <p>It’s the most fun I’ve ever had designing something, and it taught me more about brand building, audience
+          engagement, and the power of design to create a believable experience than any class or client project could.
+        </p>
+      </div>
+    </section>
+
+    <!-- ═══ Role & Scope ═══ -->
+    <section class="section">
+      <h2>Role & Scope</h2>
+      <p>Solo project. I created the brand identity, logo, menu design, website, merch, Google Maps listing, and managed
+        the entire “customer experience” — which mostly meant answering phone calls from confused and delighted
+        strangers.</p>
+    </section>
+
+    <!-- ═══ The Concept ═══ -->
+    <section class="section">
+      <h2>The Concept</h2>
+      <div class="body-text spaced-paragraphs">
+        <p>The idea was simple: what if I created a restaurant that didn’t exist, but made it look and feel completely
+          real? I wanted to see how far design and branding alone could carry an experience. No physical location, no
+          food, no staff — just a Google Maps pin, a website, a menu, and a brand identity convincing enough to make
+          people believe.</p>
+        <p>I set the listing’s address to my high school, uploaded photos, wrote descriptions, and filled in all the
+          details Google Maps asks for — hours, contact info, menu items. The phone number was my personal cell. The
+          menu was intentionally absurd: brick oven baked Italian rolls, cheesy chunks, white cream, “toe good”
+          macchiato. It looked legitimate at a glance, but the details were ridiculous if you actually read them.</p>
+      </div>
+    </section>
+
+    <!-- ═══ Menu ═══ -->
+    <div class="menu-wrap">
+      <img src="assets/playhouse/playhouse_menu.png" alt="Parker Birwin's Playhouse Menu" />
+    </div>
+
+    <!-- ═══ What Happened / The Reviews ═══ -->
+    <section class="section">
+      <h2>What Happened</h2>
+      <h3>The Reviews</h3>
+      <p>People started finding the listing organically on Google Maps. And instead of reporting it, they went along
+        with the joke. Strangers left detailed, enthusiastic five-star reviews playing along with the fake menu items.
+        One reviewer wrote about ordering the wet salmon filet. Google Local Guides — verified, high-credibility
+        reviewers — were leaving reviews, which boosted the listing’s legitimacy even further. The restaurant climbed to
+        a 4.8-star rating with 35 reviews and became one of the highest-rated restaurants in Spanish Fork.</p>
+    </section>
+
+    <!-- ═══ Review Media Grid ═══ -->
+    <div class="review-row">
+      <div class="review-main">
+        <img src="assets/playhouse/review1.png" alt="Google review" />
+      </div>
+      <div class="review-stack">
+        <div class="review-col">
+          <img src="assets/playhouse/review2.png" alt="Google review" style="width: 175px; height: 76px;" />
+          <img src="assets/playhouse/review3.png" alt="Google review" style="width: 175px; height: 82px;" />
+          <img src="assets/playhouse/review4.png" alt="Google review" style="width: 175px; height: 66px;" />
+        </div>
+        <div class="review-col">
+          <img src="assets/playhouse/review5.png" alt="Google review" style="width: 225px; height: 47px;" />
+          <img src="assets/playhouse/review6.png" alt="Google review" style="width: 225px; height: 75px;" />
+          <div style="width: 225px; height: 102px; position: relative; overflow: hidden;">
+            <img src="assets/playhouse/review7.png" alt="Google review"
+              style="position: absolute; width: 100.32%; height: 100%; left: -0.16%; top: 0; max-width: none;" />
+          </div>
+        </div>
+        <div class="review-col">
+          <img src="assets/playhouse/review8.png" alt="Google review" style="width: 271px; height: 59px;" />
+          <img src="assets/playhouse/review9.png" alt="Google review" style="width: 271px; height: 68.9px;" />
+          <img src="assets/playhouse/review10.png" alt="Google review" style="width: 271px; height: 96px;" />
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ The Phone Calls ═══ -->
+    <section class="section">
+      <h2 class="limited-width">The Phone Calls</h2>
+      <p class="limited-width">I designed and printed QR code flyers and placed them across a few college campuses. The
+        approach was intentionally non-intrusive — I put them in spots people would discover if they were curious,
+        rather than plastering them in high-traffic areas. I wanted Blankmind Radio to be something people chose to
+        find, not something shouted at them.</p>
+    </section>
+
+    <!-- ═══ The TikToks ═══ -->
+    <section class="section">
+      <h2 class="limited-width">The TikToks</h2>
+      <p class="limited-width">A woman discovered the listing and made a series of TikTok videos about it. Between her
+        videos, the content pulled in roughly 300,000 views. I had no connection to her — she found it on her own and
+        thought it was fascinating enough to document. That’s organic reach driven entirely by the strength of the
+        concept and the design’s believability.</p>
+    </section>
+
+    <!-- ═══ TikTok Grid 1 ═══ -->
+    <div class="tiktok-grid-1">
+      <img src="assets/playhouse/tiktok1.png" alt="TikTok screenshot" />
+      <img src="assets/playhouse/tiktok2.png" alt="TikTok screenshot" />
+      <img src="assets/playhouse/tiktok3.png" alt="TikTok screenshot" />
+      <img src="assets/playhouse/tiktok4.png" alt="TikTok screenshot" />
+    </div>
+
+    <!-- ═══ TikTok Grid 2 ═══ -->
+    <div class="tiktok-grid-2">
+      <img src="assets/playhouse/tiktok5.png" alt="TikTok screenshot" />
+      <img src="assets/playhouse/tiktok6.png" alt="TikTok screenshot" />
+      <img src="assets/playhouse/tiktok7.png" alt="TikTok screenshot" />
+      <img src="assets/playhouse/tiktok8.png" alt="TikTok screenshot" />
+    </div>
+
+    <!-- ═══ The End ═══ -->
+    <section class="section">
+      <h2 class="limited-width">The End</h2>
+      <p class="limited-width">Eventually, enough people reported the listing as a fake restaurant that Google suspended
+        it. By that point, the project had lived a full life — real reviews, real phone calls, real virality, all for a
+        place that never existed.</p>
+    </section>
+
+    <!-- ═══ Banned ═══ -->
+    <div class="banned-wrap" style="height: auto;">
+      <img src="assets/playhouse/banned.png" alt="Google listing suspended screenshot" />
+    </div>
+
+    <!-- ═══ What I Designed ═══ -->
+    <section class="section">
+      <h2 style="color: #b12f4f;">What I Designed</h2>
+      <div class="body-text spaced-paragraphs">
+        <p>This wasn’t just a prank — it was a full brand design exercise. I created:</p>
+        <p>A logo and visual identity designed in Photoshop, built to feel like a real, slightly quirky local
+          restaurant.</p>
+        <p>A website built on Google Sites that served as the restaurant’s online presence, complete with the menu and
+          brand imagery.</p>
+        <p>A full menu with designed layout and typography — absurd items presented with the visual seriousness of a
+          real restaurant’s menu.</p>
+        <p>Merch listed on RedBubble. Nobody bought any, but the fact that it existed added another layer of legitimacy
+          to the brand world.</p>
+        <p>A Google Maps listing fully filled out with hours, photos, contact info, and all the details that make a
+          business look real on the platform.</p>
+      </div>
+    </section>
+
+    <!-- ═══ Website Screenshot ═══ -->
+    <div class="website-wrap" style="aspect-ratio: 804 / 457; height: auto; width: 828px;">
+      <div style="position: absolute; inset: 0; overflow: hidden;">
+        <img src="assets/playhouse/website.png" alt="Playhouse website screenshot"
+          style="position: absolute; width: 118.64%; height: 100.63%; left: -9.32%; top: -0.21%; max-width: none;" />
+      </div>
+    </div>
+
+    <!-- ═══ Key Takeaways ═══ -->
+    <section class="section">
+      <h2>Key Takeaways</h2>
+      <div class="body-text spaced-paragraphs">
+        <p><strong>Design creates belief.</strong> People believed Parker Birwin’s Playhouse was real because it looked
+          and felt real. The logo, the menu layout, the Google Maps details, the website — every touchpoint was designed
+          to be cohesive and convincing. The project proved that strong branding can make anything feel legitimate.</p>
+        <p><strong>Audiences will participate if you give them something worth participating in.</strong> I didn’t ask
+          anyone to leave reviews or make TikToks. People chose to engage because the concept was fun and the execution
+          was good enough to play along with. The best engagement is voluntary.</p>
+        <p><strong>Constraints breed creativity.</strong> I was 16 with no budget, using free tools — Google Sites,
+          Photoshop, RedBubble, Google Maps. Every asset was made with what I had. The limitation forced me to focus on
+          what actually matters in branding: consistency, detail, and a clear concept.</p>
+      </div>
+    </section>
+
+    <!-- ═══ Reflection ═══ -->
+    <section class="section">
+      <h2>Reflection</h2>
+      <div class="body-text spaced-paragraphs limited-width">
+        <p>Parker Birwin’s Playhouse is the project that showed me what design can do when it’s in service of a strong
+          idea. I didn’t have a product to sell or a client to serve — I had a concept and I wanted to see how far I
+          could take it. The answer was a 4.8-star rating, 200+ phone calls, 300,000 TikTok views, and a Google
+          suspension notice.</p>
+        <p>Looking back, this was the project where I first understood that brand design isn’t just logos and color
+          palettes — it’s building a world that people believe in and want to be part of. Everything I’ve done since,
+          from Blankmind Radio to Studio Node, builds on that same instinct.</p>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    var ham = document.getElementById('hamburger');
+    var mobileNav = document.getElementById('mobile-nav');
+    var closeBtn = document.getElementById('mobile-nav-close');
+    ham.addEventListener('click', function() { mobileNav.classList.add('open'); ham.style.display = 'none'; });
+    closeBtn.addEventListener('click', function() { mobileNav.classList.remove('open'); ham.style.display = ''; });
+  </script>
+</body>
+
+</html>

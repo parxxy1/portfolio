@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <title>Blankmind — Parker Birwin</title>
+  <meta name="description"
+    content="Blankmind Radio: A human-curated music discovery platform built to share the soundtracks of life's chapters. Case study by Parker." />
+  <style>
+    @font-face {
+      font-family: 'Stolzl';
+      src: local('Stolzl Bold'), local('Stolzl-Bold');
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Stolzl';
+      src: local('Stolzl Medium'), local('Stolzl-Medium');
+      font-weight: 500;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Stolzl';
+      src: local('Stolzl Book'), local('Stolzl-Book');
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Stolzl';
+      src: local('Stolzl Light'), local('Stolzl-Light');
+      font-weight: 300;
+      font-style: normal;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: #fdffff;
+      font-family: 'Stolzl', sans-serif;
+      color: #000;
+      line-height: 1.216;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ── Layout container ─────────────────────────────────── */
+    .page {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 29px 49px;
+      display: flex;
+      flex-direction: column;
+      gap: 82px;
+    }
+
+    /* ── Top nav ──────────────────────────────────────────── */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .top-bar .home-link {
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: -2.56px;
+      color: #000;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .top-bar .home-link:hover {
+      opacity: 0.7;
+    }
+
+    nav {
+      display: flex;
+      gap: 40px;
+      align-items: center;
+    }
+
+    nav a {
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: -2.56px;
+      color: #43291f;
+      text-decoration: none;
+      line-height: 1.216;
+      transition: opacity 0.2s;
+    }
+
+    nav a:hover {
+      opacity: 0.7;
+    }
+
+    /* ── Hero ─────────────────────────────────────────────── */
+    .hero {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    .hero-left {
+      flex: 0 0 380px;
+      display: flex;
+      flex-direction: column;
+      gap: 17px;
+      justify-content: center;
+    }
+
+    .hero-left h1 {
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: -2.56px;
+      color: #010101;
+    }
+
+    .hero-details {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .hero-details .desc {
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: -0.64px;
+      line-height: 1.34;
+      max-width: 410px;
+    }
+
+    .hero-details .stats {
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: -0.64px;
+      line-height: 1.34;
+      max-width: 413px;
+    }
+
+    .hero-right {
+      flex: 1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      position: relative;
+      min-height: 453px;
+    }
+
+    .hero-right .phone-1 {
+      width: 586px;
+      height: 453px;
+      object-fit: cover;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-right .phone-2 {
+      width: 547px;
+      height: 424px;
+      object-fit: cover;
+      margin-left: -234px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Text sections  ───────────────────────────────────── */
+    .section {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .section h2 {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -1.44px;
+      line-height: 1.216;
+    }
+
+    .section h3 {
+      font-size: 36px;
+      font-weight: 300;
+      letter-spacing: -1.44px;
+      line-height: 1.216;
+    }
+
+    .section p,
+    .section .body-text {
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: -0.64px;
+      line-height: 1.34;
+      max-width: 590px;
+    }
+
+    .section ul {
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: -0.64px;
+      line-height: 1.34;
+      max-width: 590px;
+      padding-left: 24px;
+    }
+
+    .section ul li {
+      margin-bottom: 16px;
+    }
+
+    .section--wider p {
+      max-width: 675px;
+    }
+
+    .gap-14 {
+      gap: 14px;
+    }
+
+    .gap-7 {
+      gap: 7px;
+    }
+
+    .gap-17 {
+      gap: 17px;
+    }
+
+    .gap-21 {
+      gap: 21px;
+    }
+
+    .gap-27 {
+      gap: 27px;
+    }
+
+    .gap-31 {
+      gap: 31px;
+    }
+
+    .gap-37 {
+      gap: 37px;
+    }
+
+    .gap-12 {
+      gap: 12px;
+    }
+
+    /* ── Media rows ───────────────────────────────────────── */
+    .media-row {
+      display: flex;
+      align-items: center;
+      gap: 79px;
+    }
+
+    .media-row .logo-svg {
+      width: 369px;
+      height: 208px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .media-row .macbook {
+      width: 349px;
+      height: 401px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .media-row .phone-v1 {
+      width: 304px;
+      height: 414px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    /* ── Crop box: Figma-style overflow-hidden container ── */
+    .crop-box {
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .crop-box img {
+      position: absolute;
+      max-width: none;
+      pointer-events: none;
+    }
+
+    /* Two images side by side */
+    .media-pair {
+      display: flex;
+      align-items: flex-end;
+      gap: 14px;
+    }
+
+    /* Marketing photos row */
+    .photo-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+    }
+
+    /* Analytics screenshot */
+    .analytics-wrap {
+      width: 530px;
+      max-width: 100%;
+    }
+
+    .analytics-wrap .crop-box {
+      width: 100%;
+      padding-top: 82.32%;
+      /* aspect 594/489 */
+    }
+
+    /* Brand comparison */
+    .brand-row {
+      display: flex;
+      align-items: center;
+      gap: 53px;
+    }
+
+    .brand-row .logo-old {
+      width: 505px;
+      height: 284px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .brand-row .arrow-text {
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: -0.64px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .brand-row .logo-new {
+      width: 470px;
+      height: 284px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    /* Brand guide wide PNG */
+    .brand-guide {
+      width: 1100px;
+      max-width: 100%;
+      height: auto;
+      aspect-ratio: 4096 / 2055;
+      object-fit: cover;
+    }
+
+    /* Large phone mockup section */
+    .phones-large {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      position: relative;
+      width: 1100px;
+      max-width: 100%;
+    }
+
+    .phones-large .phone-big-1 {
+      width: 985px;
+      height: 762px;
+      object-fit: cover;
+      position: relative;
+      z-index: 2;
+    }
+
+    .phones-large .phone-big-2 {
+      width: 920px;
+      height: 712px;
+      object-fit: cover;
+      margin-left: -358px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* The Pit phones */
+    .pit-phones {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    .pit-phones .phone-video-wrap {
+      position: relative;
+      width: 208px;
+      height: 432px;
+      flex-shrink: 0;
+    }
+
+    .pit-phones .phone-video-wrap .phone-overlay {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+    }
+
+    /* Marketing v2 photos */
+    .marketing-v2-row {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    /* Final image */
+    .closing-wrap {
+      width: 518px;
+      max-width: 100%;
+    }
+
+    .closing-wrap .crop-box {
+      width: 100%;
+      padding-top: 78.96%;
+      /* aspect 518/409 */
+    }
+
+    /* ── Body paragraph spacing ──────────────────────────── */
+    .spaced-paragraphs p+p {
+      margin-top: 1em;
+    }
+
+    /* ── Centered text block ─────────────────────────────── */
+    .centered-text {
+      display: flex;
+      justify-content: center;
+    }
+
+    /* ── Responsive ──────────────────────────────────────── */
+    @media (max-width: 1200px) {
+      .page {
+        padding: 24px 60px;
+        gap: 60px;
+      }
+
+      .hero {
+        flex-direction: column;
+        gap: 40px;
+      }
+
+      .hero-left {
+        flex: none;
+        width: 100%;
+      }
+
+      .hero-right {
+        min-height: auto;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+      }
+
+      .hero-right .phone-1 {
+        width: 400px;
+        height: auto;
+      }
+
+      .hero-right .phone-2 {
+        width: 370px;
+        height: auto;
+        margin-left: -120px;
+      }
+
+      .media-row {
+        flex-wrap: wrap;
+        gap: 30px;
+      }
+
+      .media-pair {
+        flex-wrap: wrap;
+        gap: 14px;
+      }
+
+      .media-pair .img-wide,
+      .media-pair .img-phone {
+        width: 100%;
+        max-width: 500px;
+        height: auto;
+      }
+
+      .photo-row {
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .photo-row img {
+        height: 180px;
+      }
+
+      .brand-row {
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+
+      .brand-row .logo-old {
+        width: 350px;
+        height: auto;
+      }
+
+      .brand-row .logo-new {
+        width: 350px;
+        height: auto;
+      }
+
+      .brand-guide {
+        width: 100%;
+      }
+
+      .phones-large {
+        width: 100%;
+      }
+
+      .phones-large .phone-big-1 {
+        width: 65%;
+        height: auto;
+      }
+
+      .phones-large .phone-big-2 {
+        width: 60%;
+        height: auto;
+        margin-left: -25%;
+      }
+
+      .pit-phones {
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .pit-phones img {
+        height: 350px;
+      }
+
+      .marketing-v2-row {
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .top-bar {
+        flex-direction: column;
+        gap: 20px;
+        align-items: flex-start;
+      }
+
+      nav {
+        gap: 20px;
+      }
+
+      nav a {
+        font-size: 32px;
+      }
+
+      .top-bar .home-link {
+        font-size: 32px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 20px 24px;
+        gap: 48px;
+      }
+
+      .hero-left h1 {
+        font-size: 36px;
+      }
+
+      .section h2 {
+        font-size: 28px;
+      }
+
+      .section h3 {
+        font-size: 28px;
+      }
+
+      nav a {
+        font-size: 24px;
+      }
+
+      .top-bar .home-link {
+        font-size: 24px;
+      }
+
+      .hero-right .phone-1 {
+        width: 280px;
+      }
+
+      .hero-right .phone-2 {
+        width: 260px;
+        margin-left: -80px;
+      }
+
+      .phones-large .phone-big-1 {
+        width: 80%;
+      }
+
+      .phones-large .phone-big-2 {
+        width: 75%;
+        margin-left: -30%;
+      }
+
+      .analytics-img {
+        width: 100%;
+      }
+
+      .closing-img {
+        width: 100%;
+      }
+    }
+
+    /* ── Hamburger menu ──────────────────────────────────── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 32px;
+      height: 22px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      z-index: 300;
+    }
+    .hamburger span {
+      display: block;
+      width: 100%;
+      height: 3px;
+      background: #43291f;
+      border-radius: 2px;
+    }
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #fdffff;
+      z-index: 250;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a {
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: -2.56px;
+      color: #43291f;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .mobile-nav a:hover { opacity: 0.7; }
+    .mobile-nav-close {
+      position: absolute;
+      top: 20px;
+      right: 32px;
+      font-size: 36px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #43291f;
+    }
+    @media (max-width: 600px) {
+      .hamburger { display: flex; }
+      nav { display: none; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="page">
+
+    <!-- ═══ Nav ═══ -->
+    <header class="top-bar">
+      <a href="index.html" class="home-link">home</a>
+      <nav>
+        <a href="work.html">work</a>
+        <a href="about.html">about</a>
+        <a href="contact.html">contact</a>
+      </nav>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </header>
+    <div class="mobile-nav" id="mobile-nav">
+      <button class="mobile-nav-close" id="mobile-nav-close">✕</button>
+      <a href="work.html">work</a>
+      <a href="about.html">about</a>
+      <a href="contact.html">contact</a>
+    </div>
+
+    <!-- ═══ Hero ═══ -->
+    <section class="hero" id="hero">
+      <div class="hero-left">
+        <h1>blankmind radio</h1>
+        <div class="hero-details">
+          <p class="desc">A human-curated music discovery platform built to share the soundtracks of life's chapters.
+          </p>
+          <p class="stats">1,200 views · 42 subscribers · $0 marketing · 3 weeks</p>
+        </div>
+      </div>
+      <div class="hero-right">
+        <img class="phone-1" src="assets/blankmind/iphone16pro_1.png" alt="Blankmind Radio app — home screen" />
+        <img class="phone-2" src="assets/blankmind/iphone16pro_2.png" alt="Blankmind Radio app — episode view" />
+      </div>
+    </section>
+
+    <!-- ═══ Overview ═══ -->
+    <section class="section">
+      <h2>Overview</h2>
+      <div class="body-text spaced-paragraphs">
+        <p>Blankmind Radio is a music discovery service I created in 2024 and continue to run today. It started from a
+          simple desire: I wanted a more intentional, more personal way to share the music I love.</p>
+        <p>To me, music is the soundtrack to whatever chapter of life you're in — and as that chapter changes, so does
+          the soundtrack. I wanted a space that honored that, something more meaningful than a Spotify playlist.</p>
+        <p>What began as a solo passion project has grown into a platform with community-created content, a subscriber
+          base, and thousands of site visits — all without spending a dollar on marketing.</p>
+      </div>
+    </section>
+
+    <!-- ═══ Role & Scope ═══ -->
+    <section class="section">
+      <h2>Role &amp; Scope</h2>
+      <div class="body-text">
+        <p>Solo project. I handled everything from:</p>
+        <p>brand identity, visual design, web development, content strategy, marketing, analytics, and community
+          management.</p>
+      </div>
+    </section>
+
+    <!-- ═══ The Problem ═══ -->
+    <section class="section gap-7">
+      <h2>The problem</h2>
+      <p>Music discovery today is dominated by algorithms. Platforms like Spotify and Apple Music serve you
+        recommendations based on listening patterns, but the result often feels impersonal — optimized for engagement,
+        not connection. I wanted to create the opposite: a place where real people share what they're actually listening
+        to, with context and care. Something you choose to interact with, not something pushed at you by a
+        recommendation engine.</p>
+    </section>
+
+    <!-- ═══ Version 1 ═══ -->
+    <section class="section gap-14">
+      <h2>Version 1: The Foundation (2024)</h2>
+      <h3>Design &amp; Build</h3>
+      <p>I started by designing the initial brand and interface in Figma, then built the site on Wix. The biggest early
+        challenges were nailing down a cohesive brand language, getting music streaming to work seamlessly within Wix's
+        limitations, making the experience mobile-responsive, and avoiding paid plans for storage and hosting.</p>
+    </section>
+
+    <!-- ═══ Media: V1 Logo + MacBook + iPhone ═══ -->
+    <div class="media-row">
+      <img class="logo-svg" src="assets/blankmind/oldlogo_v1.png" alt="Blankmind Radio v1 logo" />
+      <img class="macbook" src="assets/blankmind/macbook_air.png" alt="Blankmind Radio on MacBook" />
+      <img class="phone-v1" src="assets/blankmind/iphone16pro_3.png" alt="Blankmind Radio v1 on iPhone" />
+    </div>
+
+    <!-- ═══ V1 Description ═══ -->
+    <div>
+      <p style="font-size:16px; font-weight:400; letter-spacing:-0.64px; line-height:1.34; max-width:589px;">The first
+        version featured curated episodes — roughly 30-minute playlists of my favorite music at the time, released every
+        other week. Each episode captured a specific moment in time, a snapshot of what I was listening to during that
+        chapter. I posted 9 episodes across the initial run. The site also included a shop for custom-made CDs of each
+        volume, a suggestion form, and a guest book that served as a community bulletin board.</p>
+    </div>
+
+    <!-- ═══ V1 Media pair ═══ -->
+    <div class="media-pair">
+      <!-- Gemini img: 606×274, crop: h=297.89% left=0 top=-48.95% w=100.99% -->
+      <div class="crop-box" style="width:606px; height:274px;">
+        <img src="assets/blankmind/gemini_img.png" alt="Blankmind Radio CD packaging"
+          style="height:297.89%; left:0; top:-48.95%; width:100.99%;" />
+      </div>
+      <!-- iPhone 15 Pro: 468×294, crop: h=133.71% left=-12.17% top=-16.85% w=112.17% -->
+      <div class="crop-box" style="width:468px; height:294px;">
+        <img src="assets/blankmind/iphone15pro.png" alt="Blankmind Radio v1 mobile view"
+          style="height:133.71%; left:-12.17%; top:-16.85%; width:112.17%;" />
+      </div>
+    </div>
+
+    <!-- ═══ Marketing ═══ -->
+    <section class="section gap-17">
+      <h2>Marketing</h2>
+      <p>I designed and printed QR code flyers and placed them across a few college campuses. The approach was
+        intentionally non-intrusive — I put them in spots people would discover if they were curious, rather than
+        plastering them in high-traffic areas. I wanted Blankmind Radio to be something people chose to find, not
+        something shouted at them.</p>
+    </section>
+
+    <!-- ═══ Marketing photos ═══ -->
+    <div class="photo-row">
+      <!-- IMG_6360: 193×248, crop: h=141.94% left=-2.59% top=-29.84% w=136.79% -->
+      <div class="crop-box" style="width:193px; height:248px;">
+        <img src="assets/blankmind/img_6360.png" alt="QR code flyer placement"
+          style="height:141.94%; left:-2.59%; top:-29.84%; width:136.79%;" />
+      </div>
+      <!-- IMG_6491: 189×248, crop: h=118.58% left=-16.86% top=-9.73% w=116.86% -->
+      <div class="crop-box" style="width:189px; height:248px;">
+        <img src="assets/blankmind/img_6491.png" alt="QR code flyer on campus"
+          style="height:118.58%; left:-16.86%; top:-9.73%; width:116.86%;" />
+      </div>
+      <!-- IMG_D304: 205×248, crop: h=136.11% left=-23.53% top=-2.78% w=123.53% -->
+      <div class="crop-box" style="width:205px; height:248px;">
+        <img src="assets/blankmind/img_d304.png" alt="QR code poster"
+          style="height:136.11%; left:-23.53%; top:-2.78%; width:123.53%;" />
+      </div>
+      <!-- IMG_6630: 196×248, crop: h=131.05% left=0 top=-11.16% w=124.26% -->
+      <div class="crop-box" style="width:196px; height:248px;">
+        <img src="assets/blankmind/img_6630.png" alt="Blankmind Radio flyer"
+          style="height:131.05%; left:0; top:-11.16%; width:124.26%;" />
+      </div>
+      <!-- IMG_6489: 326×245, rotated -0.16deg, crop: h=227.16% left=-39.29% top=-74.69% w=227.52% -->
+      <div class="crop-box" style="width:326px; height:245px; transform:rotate(-0.16deg);">
+        <img src="assets/blankmind/img_6489.png" alt="QR code sticker"
+          style="height:227.16%; left:-39.29%; top:-74.69%; width:227.52%;" />
+      </div>
+    </div>
+
+    <!-- ═══ Results V1 ═══ -->
+    <section class="section gap-17">
+      <h2>Results</h2>
+      <p>In the first 3 months, Version 1 logged 800 site sessions from 343 unique visitors. What started as a local
+        campus project showed up in analytics across the country through word of mouth. I grew a subscriber base of 25
+        people signed up for new episode notifications. The entire project was run on a zero-dollar marketing budget —
+        just printed flyers and personal outreach.</p>
+    </section>
+
+    <!-- ═══ Analytics screenshot ═══ -->
+    <div class="analytics-wrap">
+      <!-- Screenshot: aspect 594/489, crop: h=137.62% left=-25.05% top=-2.38% w=225.02% -->
+      <div class="crop-box">
+        <img src="assets/blankmind/screenshot_analytics.png" alt="Google Analytics dashboard for Blankmind Radio V1"
+          style="height:137.62%; left:-25.05%; top:-2.38%; width:225.02%;" />
+      </div>
+    </div>
+
+    <!-- ═══ Version 2 ═══ -->
+    <section class="section gap-14">
+      <h2>Version 2: The Reimagining (2026)</h2>
+      <h3>Why Rebuild?</h3>
+      <p style="max-width: 566px;">After running Version 1, I stepped away to grow as a designer. When I came back to
+        the project in 2026, I wanted to reimagine it from the ground up. I had three goals: own the platform completely
+        (no web builders, no monthly fees), open it up to the community, and bring the brand to a level that matched my
+        growth as a designer.</p>
+    </section>
+
+    <!-- ═══ Brand comparison ═══ -->
+    <div class="brand-row">
+      <img class="logo-old" src="assets/blankmind/oldlogo_v1.png" alt="Blankmind Radio original logo" />
+      <div class="arrow-text">
+        <p>now</p>
+        <p>→</p>
+      </div>
+      <img class="logo-new" src="assets/blankmind/blankmindlogo.png" alt="Blankmind Radio new logo" />
+    </div>
+
+    <!-- ═══ New Brand Identity ═══ -->
+    <section class="section gap-31">
+      <h2>New Brand Identity</h2>
+      <p>I designed a new logo, established a defined brand guide with specific colors and typography, and created a
+        visual system that's clean, accessible, and cohesive. The first version reflected where I was at the time — the
+        new version reflects where I am now.</p>
+    </section>
+
+    <!-- ═══ Brand guide SVG ═══ -->
+    <div>
+      <img class="brand-guide" src="assets/blankmind/brand_guide.png"
+        alt="Blankmind Radio brand guide — colors and typography" />
+    </div>
+
+    <!-- ═══ Large phone mockups ═══ -->
+    <div class="phones-large">
+      <img class="phone-big-1" src="assets/blankmind/iphone16pro_1.png" alt="Blankmind Radio V2 — home screen" />
+      <img class="phone-big-2" src="assets/blankmind/iphone16pro_2.png" alt="Blankmind Radio V2 — episode view" />
+    </div>
+
+    <!-- ═══ Hand-Built Tech Stack ═══ -->
+    <section class="section gap-27">
+      <h2>Hand-Built Tech Stack</h2>
+      <div class="body-text spaced-paragraphs">
+        <p>I rebuilt the entire site from scratch using HTML, CSS, and JavaScript, hosted on Firebase with a custom
+          domain (blankmindradio.com). The stack I assembled gives me full ownership with no recurring platform fees:
+        </p>
+        <ul>
+          <li>Cloudflare R2 for music file storage and direct streaming through a custom media player</li>
+          <li>OpenForm + Firestore for form handling</li>
+          <li>TextBee with a burner phone for bulk SMS notifications to subscribers</li>
+          <li>Google Analytics for tracking and insights</li>
+          <li>Firebase for hosting</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ═══ The Pit ═══ -->
+    <section class="section section--wider gap-27">
+      <h2>The Pit: Community-Created Episodes</h2>
+      <p>The biggest addition in Version 2 is The Pit — a section where anyone can create and submit their own episode.
+        Users fill out a form with a playlist link, their curator name, and a description. Submissions come into a
+        custom-built dashboard I made, where I source the audio files, host them in cloud storage, and publish the
+        episode to the site.</p>
+    </section>
+
+    <!-- ═══ The Pit phones ═══ -->
+    <div class="pit-phones">
+      <!-- iPhone 16 Pro: 225×466, crop: h=139.43% left=-193.5% top=-32.03% w=383.63% -->
+      <div class="crop-box" style="width:225px; height:466px;">
+        <img src="assets/blankmind/iphone16pro_4.png" alt="The Pit — submission form"
+          style="height:139.43%; left:-193.5%; top:-32.03%; width:383.63%;" />
+      </div>
+      <!-- iPhone 16 Pro: 214×466, crop: h=138.04% left=-206.87% top=-31.41% w=398.18% -->
+      <div class="crop-box" style="width:214px; height:466px;">
+        <img src="assets/blankmind/iphone16pro_5.png" alt="The Pit — episode feed"
+          style="height:138.04%; left:-206.87%; top:-31.41%; width:398.18%;" />
+      </div>
+      <div class="phone-video-wrap">
+        <video autoplay loop muted playsinline style="position:absolute; width:194px; height:420px; top:6px; left:7px; object-fit:cover; border-radius:25px; z-index:1;">
+          <source src="assets/blankmind/pit_recording.mp4" type="video/mp4" />
+        </video>
+        <img class="phone-overlay" src="assets/blankmind/phone_frame.png" alt="Phone frame overlay" />
+      </div>
+    </div>
+
+    <!-- ═══ The Pit description ═══ -->
+    <div>
+      <p style="font-size:16px; font-weight:400; letter-spacing:-0.64px; line-height:1.34; max-width:588px;">I initially
+        launched The Pit with a leaderboard that ranked episodes by likes, but I quickly realized that created the wrong
+        dynamic. I wanted The Pit to be a place for sharing, not competing. I replaced the leaderboard with a simple
+        chronological feed, and the vibe shifted immediately. The site also hosts music from a couple of local
+        musicians, further rooting Blankmind Radio in real community.</p>
+    </div>
+
+    <!-- ═══ Marketing V2 ═══ -->
+    <section class="section gap-37">
+      <h2>Marketing V2</h2>
+      <p>For the relaunch, I designed 6 different types of QR code flyers, stickers, and posters and deployed them
+        across campus. I also ran context-specific guerrilla campaigns — for a college casino night, I put up signs in
+        the bathrooms that read "Scan for +200 luck" with a link to the site. That single activation drove roughly 60
+        new users in a few hours. Again, zero marketing budget. Just design, printing, and hustle.</p>
+    </section>
+
+    <!-- ═══ Marketing V2 photos ═══ -->
+    <div class="marketing-v2-row">
+      <!-- IMG_0782: 400×315 container, inner 315×400 rotated -90deg, crop: h=116.39% left=-2.09% top=-8.02% w=110.57% -->
+      <div style="width:400px; height:315px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+        <div style="transform:rotate(-90deg); flex:none;">
+          <div class="crop-box" style="width:315px; height:400px;">
+            <img src="assets/blankmind/img_0782.png" alt="QR code flyer — campus bathroom"
+              style="height:116.39%; left:-2.09%; top:-8.02%; width:110.57%;" />
+          </div>
+        </div>
+      </div>
+      <!-- Screenshot marketing: 396×315, crop: h=102.04% left=-1.46% top=-0.51% w=103.53% -->
+      <div class="crop-box" style="width:396px; height:315px;">
+        <img src="assets/blankmind/screenshot_marketing.png" alt="Marketing activation results"
+          style="height:102.04%; left:-1.46%; top:-0.51%; width:103.53%;" />
+      </div>
+    </div>
+
+    <!-- ═══ Results V2 ═══ -->
+    <section class="section gap-21">
+      <h2>Results</h2>
+      <p>In the first 3 weeks, Version 2 reached 1,200 views from 239 new users — putting it on pace for roughly 4x the
+        visitor rate of Version 1. The subscriber base grew from 25 to 42, a 68% increase. The community features drove
+        a meaningful portion of this growth, alongside the improved marketing. The site is fully mobile-responsive, and
+        the only costs have been printing and the domain name.</p>
+    </section>
+
+    <!-- ═══ Key Design Decisions ═══ -->
+    <section class="section gap-12">
+      <h2>Key Design Decision</h2>
+      <div class="body-text spaced-paragraphs">
+        <p>Non-intrusive marketing. I never wanted Blankmind Radio to feel like spam. The QR code placements were
+          designed to reward curiosity, not demand attention. This philosophy shaped the entire brand voice.</p>
+        <p>Removing the leaderboard. Ranking community episodes by likes was creating competition where I wanted
+          collaboration. Switching to chronological ordering was a small change with a big impact on the culture of the
+          platform.</p>
+        <p>Owning the stack. Moving off Wix to a hand-built site wasn't just a technical decision — it was a design
+          decision. Full control meant I could build a custom media player, handle streaming exactly how I wanted, and
+          never be limited by a platform's templates or pricing.</p>
+        <p>Opening it up. Version 1 was personal. Version 2 made space for other people. That shift from "my radio
+          station" to "our radio station" is what gave the project real life.</p>
+      </div>
+    </section>
+
+    <!-- ═══ Reflection ═══ -->
+    <section class="section gap-12">
+      <h2>Reflection</h2>
+      <div class="body-text spaced-paragraphs">
+        <p>Blankmind Radio is the project I'm most proud of. It started as a way to share music I love, and it's grown
+          into a platform that other people use to share what they love too. It taught me how to build and maintain a
+          product end-to-end: brand strategy, visual design, frontend development, infrastructure, analytics, community
+          management, and grassroots marketing.</p>
+        <p>Every skill I used on this project, I either already had or taught myself along the way.</p>
+        <p>The project is ongoing. I'm continuing to release episodes, grow the community, and refine the platform.
+          What's next is figuring out how to scale the community features and make the submission-to-publish pipeline
+          faster without losing the personal touch that makes it work.</p>
+      </div>
+    </section>
+
+    <!-- ═══ Closing image ═══ -->
+    <div class="closing-wrap">
+      <!-- IMG_0887: aspect 518/409, crop: h=185.54% left=-0.06% top=-49.28% w=109.96% -->
+      <div class="crop-box">
+        <img src="assets/blankmind/img_0887.png" alt="Blankmind Radio in the wild"
+          style="height:185.54%; left:-0.06%; top:-49.28%; width:109.96%;" />
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    var ham = document.getElementById('hamburger');
+    var mobileNav = document.getElementById('mobile-nav');
+    var closeBtn = document.getElementById('mobile-nav-close');
+    ham.addEventListener('click', function() { mobileNav.classList.add('open'); ham.style.display = 'none'; });
+    closeBtn.addEventListener('click', function() { mobileNav.classList.remove('open'); ham.style.display = ''; });
+  </script>
+</body>
+
+</html>
