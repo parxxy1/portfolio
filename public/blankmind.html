@@ -365,19 +365,20 @@
 
     /* Large phone mockup section */
     .phones-large {
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
       position: relative;
       width: 1100px;
       max-width: 100%;
+      height: 762px;
+      overflow: hidden;
     }
 
     .phones-large .phone-big-1 {
       width: 985px;
       height: 762px;
       object-fit: cover;
-      position: relative;
+      position: absolute;
+      left: -223px;
+      top: 0;
       z-index: 2;
     }
 
@@ -385,8 +386,9 @@
       width: 920px;
       height: 712px;
       object-fit: cover;
-      margin-left: -358px;
-      position: relative;
+      position: absolute;
+      left: 404px;
+      top: 25px;
       z-index: 1;
     }
 
@@ -530,17 +532,23 @@
 
       .phones-large {
         width: 100%;
+        height: 0;
+        padding-top: 69.27%;
+        /* 762/1100 aspect ratio */
       }
 
       .phones-large .phone-big-1 {
-        width: 65%;
+        width: 89.5%;
         height: auto;
+        left: -20.3%;
+        top: 0;
       }
 
       .phones-large .phone-big-2 {
-        width: 60%;
+        width: 83.6%;
         height: auto;
-        margin-left: -25%;
+        left: 36.7%;
+        top: 3.3%;
       }
 
       .pit-phones {
@@ -606,18 +614,19 @@
         width: 280px;
       }
 
+
+
       .hero-right .phone-2 {
         width: 260px;
-        margin-left: -80px;
+        margin-left: 0px;
       }
 
       .phones-large .phone-big-1 {
-        width: 80%;
+        width: 89.5%;
       }
 
       .phones-large .phone-big-2 {
-        width: 75%;
-        margin-left: -30%;
+        width: 83.6%;
       }
 
       .analytics-img {
@@ -626,6 +635,11 @@
 
       .closing-img {
         width: 100%;
+      }
+
+      .media-pair .crop-box,
+      .photo-row .crop-box {
+        max-width: 100% !important;
       }
     }
 
@@ -642,6 +656,7 @@
       padding: 0;
       z-index: 300;
     }
+
     .hamburger span {
       display: block;
       width: 100%;
@@ -649,6 +664,7 @@
       background: #43291f;
       border-radius: 2px;
     }
+
     .mobile-nav {
       display: none;
       position: fixed;
@@ -660,7 +676,11 @@
       justify-content: center;
       gap: 20px;
     }
-    .mobile-nav.open { display: flex; }
+
+    .mobile-nav.open {
+      display: flex;
+    }
+
     .mobile-nav a {
       font-size: 64px;
       font-weight: 700;
@@ -669,7 +689,11 @@
       text-decoration: none;
       transition: opacity 0.2s;
     }
-    .mobile-nav a:hover { opacity: 0.7; }
+
+    .mobile-nav a:hover {
+      opacity: 0.7;
+    }
+
     .mobile-nav-close {
       position: absolute;
       top: 20px;
@@ -680,9 +704,20 @@
       cursor: pointer;
       color: #43291f;
     }
+
     @media (max-width: 600px) {
-      .hamburger { display: flex; }
-      nav { display: none; }
+      .hamburger {
+        display: flex;
+      }
+
+      nav {
+        display: none;
+      }
+
+      .top-bar {
+        flex-direction: row;
+        align-items: center;
+      }
     }
   </style>
 </head>
@@ -693,11 +728,11 @@
 
     <!-- ═══ Nav ═══ -->
     <header class="top-bar">
-      <a href="index.html" class="home-link">home</a>
+      <a href="/" class="home-link">home</a>
       <nav>
-        <a href="work.html">work</a>
-        <a href="about.html">about</a>
-        <a href="contact.html">contact</a>
+        <a href="work">work</a>
+        <a href="about">about</a>
+        <a href="contact">contact</a>
       </nav>
       <button class="hamburger" id="hamburger" aria-label="Menu">
         <span></span><span></span><span></span>
@@ -705,9 +740,9 @@
     </header>
     <div class="mobile-nav" id="mobile-nav">
       <button class="mobile-nav-close" id="mobile-nav-close">✕</button>
-      <a href="work.html">work</a>
-      <a href="about.html">about</a>
-      <a href="contact.html">contact</a>
+      <a href="work">work</a>
+      <a href="about">about</a>
+      <a href="contact">contact</a>
     </div>
 
     <!-- ═══ Hero ═══ -->
@@ -933,7 +968,8 @@
           style="height:138.04%; left:-206.87%; top:-31.41%; width:398.18%;" />
       </div>
       <div class="phone-video-wrap">
-        <video autoplay loop muted playsinline style="position:absolute; width:194px; height:420px; top:6px; left:7px; object-fit:cover; border-radius:25px; z-index:1;">
+        <video autoplay loop muted playsinline
+          style="position:absolute; width:194px; height:420px; top:6px; left:7px; object-fit:cover; border-radius:25px; z-index:1;">
           <source src="assets/blankmind/pit_recording.mp4" type="video/mp4" />
         </video>
         <img class="phone-overlay" src="assets/blankmind/phone_frame.png" alt="Phone frame overlay" />
@@ -1032,8 +1068,8 @@
     var ham = document.getElementById('hamburger');
     var mobileNav = document.getElementById('mobile-nav');
     var closeBtn = document.getElementById('mobile-nav-close');
-    ham.addEventListener('click', function() { mobileNav.classList.add('open'); ham.style.display = 'none'; });
-    closeBtn.addEventListener('click', function() { mobileNav.classList.remove('open'); ham.style.display = ''; });
+    ham.addEventListener('click', function () { mobileNav.classList.add('open'); ham.style.display = 'none'; });
+    closeBtn.addEventListener('click', function () { mobileNav.classList.remove('open'); ham.style.display = ''; });
   </script>
 </body>
 
