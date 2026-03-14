@@ -32,8 +32,6 @@
     canvas {
       display: block;
       cursor: crosshair;
-      image-rendering: pixelated;
-      image-rendering: crisp-edges;
     }
 
     /* UI Overlay */
@@ -84,9 +82,9 @@
 
     .tool-btn {
       font-family: 'Stolzl', sans-serif;
-      font-size: clamp(11px, 1.4vw, 16px);
+      font-size: 20px;
       font-weight: 400;
-      letter-spacing: -0.5px;
+      letter-spacing: -0.8px;
       color: #fdffff;
       background: #9d7e67;
       height: auto;
@@ -98,8 +96,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 10px 14px;
-      white-space: nowrap;
+      padding: 13px 22px;
       transition: background 0.12s, opacity 0.12s;
     }
 
@@ -113,48 +110,26 @@
     }
 
     /* We'll draw the text on the canvas so it interacts with sand */
-    #ui-layer nav {
-      display: none;
-    }
+    #ui-layer nav { display: none; }
 
-    @media (max-width: 600px) {
+    @media (max-width: 768px) {
       #menu {
-        position: fixed;
-        bottom: 0;
-        left: 0;
         right: 0;
+        left: 0;
         top: auto;
+        bottom: 20px;
         transform: none;
-        width: 100%;
         flex-direction: row;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        padding: 0 10px;
         gap: 8px;
-        background: rgba(253, 255, 255, 0.93);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        justify-content: flex-start;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-        z-index: 200;
-        border-top: 1px solid rgba(0, 0, 0, 0.06);
       }
-
-      #menu::-webkit-scrollbar {
-        display: none;
-      }
-
-      #menu input[type="range"] {
-        display: none;
-      }
-
       .tool-btn {
-        font-size: 13px;
-        padding: 9px 14px;
-        border-radius: 12px;
-        letter-spacing: -0.4px;
-        flex-shrink: 0;
+        padding: 8px 12px;
+        font-size: 14px;
+        border-radius: 10px;
       }
     }
   </style>
@@ -163,22 +138,25 @@
 <body>
   <div id="ui-layer">
     <nav>
-      <a href="work">work</a>
-      <a href="about">about</a>
-      <a href="contact">contact</a>
+      <a href="work.html">work</a>
+      <a href="about.html">about</a>
+      <a href="contact.html">contact</a>
     </nav>
   </div>
 
   <div id="menu">
-    <button class="tool-btn" data-tool="sand">sand</button>
+    <button class="tool-btn active" data-tool="sand">sand</button>
     <button class="tool-btn" data-tool="water">water</button>
     <button class="tool-btn" data-tool="bomb">bomb</button>
     <button class="tool-btn" data-tool="concrete">concrete</button>
     <button class="tool-btn" data-tool="vine">vine</button>
-    <button class="tool-btn" data-tool="torch" style="display:none">torch</button>
-    <button class="tool-btn active" data-tool="creature">creature <span id="creature-count" style="margin-left: 4px; font-size: 11px; opacity: 0.7;">(0)</span></button>
-    <button class="tool-btn" data-tool="cat" style="display:none">cat <span id="cat-count" style="margin-left: 4px; font-size: 11px; opacity: 0.7;">(0)</span></button>
-    <input type="range" id="density-slider" min="1" max="20" value="8" style="margin-top:10px; cursor:pointer;" title="Brush Density" />
+    <button class="tool-btn" data-tool="torch">torch</button>
+    <button class="tool-btn" data-tool="creature" style="font-size: 16px;">creature <span id="creature-count"
+        style="margin-left: 4px; font-size: 11px; opacity: 0.7;">(0)</span></button>
+    <button class="tool-btn" data-tool="cat" style="font-size: 16px;">cat <span id="cat-count"
+        style="margin-left: 4px; font-size: 11px; opacity: 0.7;">(0)</span></button>
+    <input type="range" id="density-slider" min="1" max="20" value="8" style="margin-top:10px; cursor:pointer;"
+      title="Brush Density">
   </div>
 
   <canvas id="canvas"></canvas>
@@ -230,7 +208,7 @@
         const filter = this.ctx.createBiquadFilter();
         filter.type = 'lowpass';
         filter.frequency.value = 800 + Math.random() * 400;
-
+        
         const g = this.ctx.createGain();
         g.gain.setValueAtTime(0.05, this.ctx.currentTime);
         g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.05);
@@ -407,16 +385,16 @@
         const hue2rgb = (p, q, t) => {
           if (t < 0) t += 1;
           if (t > 1) t -= 1;
-          if (t < 1 / 6) return p + (q - p) * 6 * t;
-          if (t < 1 / 2) return q;
-          if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+          if (t < 1/6) return p + (q - p) * 6 * t;
+          if (t < 1/2) return q;
+          if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
           return p;
         };
         const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
         const p = 2 * l - q;
-        r = hue2rgb(p, q, h + 1 / 3);
+        r = hue2rgb(p, q, h + 1/3);
         g = hue2rgb(p, q, h);
-        b = hue2rgb(p, q, h - 1 / 3);
+        b = hue2rgb(p, q, h - 1/3);
       }
       return ((0xFF << 24) | (Math.round(b * 255) << 16) | (Math.round(g * 255) << 8) | Math.round(r * 255)) >>> 0;
     }
@@ -542,13 +520,11 @@
         { text: 'contact', url: 'contact.html' }
       ];
 
-      const navFontSize = 64;
+      const navFontSize = 64; 
       const navFontWeight = 700;
       const navLetterSpacing = -2.56;
-      const isMobileNav = W < 768;
-      const activeNavFontSize = isMobileNav ? 36 : navFontSize;
-      const navSpacing = isMobileNav ? 20 : 40;
-      oc.font = `${navFontWeight} ${activeNavFontSize}px 'Stolzl', sans-serif`;
+      oc.font = `${navFontWeight} ${navFontSize}px 'Stolzl', sans-serif`;
+      const navSpacing = 40;
 
       // Helper to measure text with spacing
       const measureTextWithSpacing = (text) => {
@@ -556,31 +532,32 @@
         for (let char of text) {
           w += oc.measureText(char).width + navLetterSpacing;
         }
-        return w - navLetterSpacing;
+        return w - navLetterSpacing; // remove last spacing
       };
 
-      // Measure total width (with correct font already set)
+      // Measure total width
       let totalNavWidth = 0;
       links.forEach((l, i) => {
         totalNavWidth += measureTextWithSpacing(l.text) + (i < links.length - 1 ? navSpacing : 0);
       });
 
-      // Center on mobile, right-align on desktop
-      let startX = isMobileNav
-        ? Math.max(8, (W - totalNavWidth) / 2)
-        : W - totalNavWidth - 49;
+      let startX = W - totalNavWidth - 49; 
+      if (W < 768) {
+        startX = (W - totalNavWidth) / 2; 
+        oc.font = `${navFontWeight} 36px 'Stolzl', sans-serif`;
+      }
 
       links.forEach((l, i) => {
         const tw = measureTextWithSpacing(l.text);
-        const ty = (isMobileNav ? 40 : 49) + activeNavFontSize;
-
+        const ty = (W < 768 ? 20 : 29) + (W < 768 ? 36 : navFontSize); 
+        
         let charX = startX;
         for (let char of l.text) {
           oc.fillText(char, charX, ty);
           charX += oc.measureText(char).width + navLetterSpacing;
         }
 
-        navItems.push({ text: l.text, x: startX, y: ty - activeNavFontSize, w: tw, h: activeNavFontSize, url: l.url });
+        navItems.push({ text: l.text, x: startX, y: ty - (W < 768 ? 36 : navFontSize), w: tw, h: (W < 768 ? 36 : navFontSize), url: l.url });
         startX += tw + navSpacing;
       });
 
@@ -594,7 +571,7 @@
           outer: for (let py = 0; py < CELL; py++)
             for (let pxc = 0; pxc < CELL; pxc++)
               if (px[((r * CELL + py) * W + c * CELL + pxc) * 4 + 3] > 32) { hit = true; break outer; }
-
+          
           if (hit) {
             const idx = ci(c, r);
             walls[idx] = 1;
@@ -604,7 +581,7 @@
             for (let i = 0; i < navItems.length; i++) {
               const item = navItems[i];
               if (worldX >= item.x - CELL && worldX <= item.x + item.w + CELL &&
-                worldY >= item.y - CELL && worldY <= item.y + item.h + CELL) {
+                  worldY >= item.y - CELL && worldY <= item.y + item.h + CELL) {
                 // Double check with actual pixel mapping if needed, but bounding box is close enough for tagging
                 wallNavID[idx] = i;
                 break;
@@ -617,9 +594,8 @@
 
     // ── Resize ────────────────────────────────────────────────────────────────
     function resize() {
-      const mobileBar = ('ontouchstart' in window || navigator.maxTouchPoints > 0) ? 72 : 0;
       canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight - mobileBar;
+      canvas.height = window.innerHeight;
       cols = Math.floor(canvas.width / CELL);
       rows = Math.floor(canvas.height / CELL);
       grid = new Uint8Array(cols * rows);
@@ -634,7 +610,7 @@
     }
 
     // ── Tool menu ─────────────────────────────────────────────────────────────
-    let activeTool = 'creature';
+    let activeTool = 'sand';
     let bombCooldown = 0;
     let hasClickedMenu = false;
 
@@ -650,7 +626,7 @@
         btn.classList.add('active');
 
         if (activeTool === 'concrete') {
-          densitySlider.value = 16;
+          densitySlider.value = (window.innerWidth < 768) ? 8 : 16;
         } else if (activeTool === 'vine') {
           densitySlider.value = 2;
         } else if (activeTool === 'creature' || activeTool === 'cat') {
@@ -669,7 +645,7 @@
 
     function pour() {
       if (mx < 0) return;
-      audio.init();
+      audio.init(); 
       // Sand pours on hover initially. After menu clicked, ALL tools require click-and-hold
       if (!mouseIsDown) {
         if (activeTool === 'sand' && !hasClickedMenu) {
@@ -706,12 +682,12 @@
             const bc = mc + dc, br = mr + dr;
             if (ok(bc, br) && (free(bc, br) || grid[ci(bc, br)] === WATER)) {
               const bi = ci(bc, br);
-              grid[bi] = BOMB; gridCol[bi] = BOMB_HOT; gridTimer[bi] = BOMB_FUSE; // Auto-ignite
+              grid[bi] = BOMB; gridCol[bi] = BOMB_DIM; gridTimer[bi] = 0; // Inert until lit
               placed = true;
             }
           }
         }
-        if (placed) bombCooldown = 5;
+        if (placed) bombCooldown = 5; 
         return;
       }
 
@@ -759,7 +735,7 @@
       for (let n = 0; n < rate; n++) {
         const dc = (Math.random() * (spread * 2 + 1) | 0) - spread;
         const dr = (Math.random() * (spread * 2 + 1) | 0) - spread;
-
+        
         // SNAP TO 2x2 CLUSTER (4px CHUNK)
         const sc = Math.floor((mc + dc) / 2) * 2;
         const sr = Math.floor((mr + dr) / 2) * 2;
@@ -775,7 +751,7 @@
           }
 
           if (canPlace) {
-            const col = (type === SAND)
+            const col = (type === SAND) 
               ? RAINBOW_BASE + ((Math.floor((sandHue / 360) * RAINBOW_COUNT) + (Math.random() * cnt | 0)) % RAINBOW_COUNT)
               : (Math.random() * cnt | 0) + base;
 
@@ -874,15 +850,15 @@
           if (t === EMPTY || t === FIRE || t === ROOT || t === VINE || t === CONCRETE) continue;
 
           const isClusterTop = (c % 2 === 0 && r % 2 === 0 &&
-            grid[ci(c + 1, r)] === t &&
-            grid[ci(c, r + 1)] === t &&
-            grid[ci(c + 1, r + 1)] === t);
+                               grid[ci(c + 1, r)] === t &&
+                               grid[ci(c, r + 1)] === t &&
+                               grid[ci(c + 1, r + 1)] === t);
 
           if (isClusterTop) {
             let moved = false;
             if (free(c, r + 2) && free(c + 1, r + 2)) {
-              move(i, ci(c, r + 2)); move(ci(c + 1, r), ci(c + 1, r + 2));
-              move(ci(c, r + 1), ci(c, r + 3)); move(ci(c + 1, r + 1), ci(c + 1, r + 3));
+              move(i, ci(c, r + 2)); move(ci(c+1, r), ci(c+1, r+2));
+              move(ci(c, r+1), ci(c, r+3)); move(ci(c+1, r+1), ci(c+1, r+3));
               moved = true;
             } else if (t === SAND || t === BOMB) {
               const d = lf ? -2 : 2;
@@ -897,7 +873,7 @@
               }
             }
             if (moved) {
-              visited[i] = visited[ci(c + 1, r)] = visited[ci(c, r + 1)] = visited[ci(c + 1, r + 1)] = frameCount;
+              visited[i] = visited[ci(c+1, r)] = visited[ci(c, r+1)] = visited[ci(c+1, r+1)] = frameCount;
               continue;
             }
           }
@@ -936,7 +912,7 @@
         if (type === BOMB) {
           if (gridTimer[i] === 0) {
             const c = i % cols, r = Math.floor(i / cols);
-            const dirs = [{ dc: 0, dr: 1 }, { dc: 0, dr: -1 }, { dc: 1, dr: 0 }, { dc: -1, dr: 0 }];
+            const dirs = [{dc:0, dr:1}, {dc:0, dr:-1}, {dc:1, dr:0}, {dc:-1, dr:0}];
             for (const d of dirs) {
               const nc = c + d.dc, nr = r + d.dr;
               if (ok(nc, nr) && grid[ci(nc, nr)] === FIRE) { igniteCluster(i); break; }
@@ -976,9 +952,9 @@
                 let hasSup = false;
                 for (let sy = -1; sy <= 1; sy++) {
                   for (let sx = -1; sx <= 1; sx++) {
-                    if (ok(nc + sx, nr + sy)) {
-                      const g = grid[ci(nc + sx, nr + sy)];
-                      if (g === VINE || g === ROOT || g === CONCRETE || walls[ci(nc + sx, nr + sy)]) hasSup = true;
+                    if (ok(nc+sx, nr+sy)) {
+                      const g = grid[ci(nc+sx, nr+sy)];
+                      if (g === VINE || g === ROOT || g === CONCRETE || walls[ci(nc+sx, nr+sy)]) hasSup = true;
                     }
                   }
                 }
@@ -1131,7 +1107,7 @@
         if (grid[i] !== BOMB || gridTimer[i] > 0) continue;
         gridTimer[i] = BOMB_FUSE;
         const c = i % cols, r = Math.floor(i / cols);
-        const dirs = [{ dc: 0, dr: 1 }, { dc: 0, dr: -1 }, { dc: 1, dr: 0 }, { dc: -1, dr: 0 }];
+        const dirs = [{dc:0, dr:1}, {dc:0, dr:-1}, {dc:1, dr:0}, {dc:-1, dr:0}];
         for (const d of dirs) {
           const nc = c + d.dc, nr = r + d.dr;
           if (ok(nc, nr)) {
@@ -1200,7 +1176,7 @@
           cat.c = nc;
           if (Math.random() < 0.2) audio.playStep();
         } else if (ok(nc, cr) && ok(nc, cr - 1) && ok(nc, cr - 2) && ok(nc, cr - 3)) {
-          if (!solid(nc, cr - 1)) { cat.c = nc; cat.r = cr - 1; audio.playStep(); }
+          if (!solid(nc, cr - 1)) { cat.c = nc; cat.r = cr - 1; audio.playStep(); } 
           else if (!solid(nc, cr - 2) && !solid(cat.c, cr - 1)) { cat.c = nc; cat.r = cr - 2; audio.playStep(); }
           else if (!solid(nc, cr - 3) && !solid(cat.c, cr - 1) && !solid(cat.c, cr - 2)) { cat.c = nc; cat.r = cr - 3; audio.playStep(); }
           else cat.dir *= -1;
@@ -1231,25 +1207,19 @@
             const t = grid[i];
             const col = PALETTE[gridCol[i]];
             if (t === FIRE || t === VINE || t === ROOT) {
-              // Draw at 4px aligned to 2x2 cell grid
-              const ec = c & ~1;
-              const er = r & ~1;
-              for (let py = 0; py < CELL * 2; py++) {
-                const rowPx = er * CELL + py;
-                if (rowPx >= canvas.height) break;
-                const base = rowPx * canvas.width + ec * CELL;
-                for (let pxc = 0; pxc < CELL * 2; pxc++) {
-                  if (ec * CELL + pxc < canvas.width) imgBuf[base + pxc] = col;
-                }
+              // Draw at 2px resolution
+              for (let py = 0; py < CELL; py++) {
+                const base = (r * CELL + py) * canvas.width + c * CELL;
+                for (let pxc = 0; pxc < CELL; pxc++) imgBuf[base + pxc] = col;
               }
             } else if (c % 2 === 0 && r % 2 === 0) {
               // Draw 2x2 clusters as 4x4 pixels
               for (let py = 0; py < CELL * 2; py++) {
                 const base = (r * CELL + py) * canvas.width + c * CELL;
                 for (let pxc = 0; pxc < CELL * 2; pxc++) {
-                  if (c * CELL + pxc < canvas.width && r * CELL + py < canvas.height) {
-                    imgBuf[base + pxc] = col;
-                  }
+                   if (c * CELL + pxc < canvas.width && r * CELL + py < canvas.height) {
+                     imgBuf[base + pxc] = col;
+                   }
                 }
               }
             }
@@ -1281,9 +1251,9 @@
         if (wc === 0) shape[4][0] = 0;
         else if (wc === 2) shape[4][2] = 0;
 
-        // Offset so the figure sits entirely above cr.r (feet align to grid position)
+        // Offset so feet are at creature's grid position
         const ox = px - CELL;
-        const oy = py - 10 * CELL;
+        const oy = py - 4 * CELL;
 
         for (let sy = 0; sy < 5; sy++) {
           for (let sx = 0; sx < 3; sx++) {
@@ -1390,36 +1360,7 @@
     const blob = new Blob([workerCode], { type: 'application/javascript' });
     const worker = new Worker(URL.createObjectURL(blob));
 
-    // ── Mobile auto-pour ──────────────────────────────────────────────────────
-    const isMobile = ('ontouchstart' in window || navigator.maxTouchPoints > 0);
-    let mobileAutoX = -1, mobileAutoY = -1, mobileVx = 1.8, mobileVy = 1.1;
-    let mobileAutoDone = false;
-
-    function updateMobileAuto() {
-      if (!isMobile || mobileAutoDone) return;
-      if (mobileAutoX < 0) {
-        mobileAutoX = canvas.width * (0.15 + Math.random() * 0.5);
-        mobileAutoY = canvas.height * (0.15 + Math.random() * 0.4);
-        mobileVx = (Math.random() - 0.5) * 3.5;
-        mobileVy = (Math.random() - 0.5) * 2.5;
-      }
-      mobileAutoX += mobileVx;
-      mobileAutoY += mobileVy;
-      const px = canvas.width * 0.08;
-      const pyTop = canvas.height * 0.08;
-      const pyBot = canvas.height * 0.70;
-      if (mobileAutoX < px || mobileAutoX > canvas.width - px) mobileVx *= -1;
-      if (mobileAutoY < pyTop || mobileAutoY > pyBot) mobileVy *= -1;
-      if (Math.random() < 0.01) mobileVx += (Math.random() - 0.5) * 1.5;
-      if (Math.random() < 0.01) mobileVy += (Math.random() - 0.5) * 1.5;
-      mobileVx = Math.max(-4, Math.min(4, mobileVx));
-      mobileVy = Math.max(-3, Math.min(3, mobileVy));
-      mx = mobileAutoX;
-      my = mobileAutoY;
-    }
-
     function loop() {
-      updateMobileAuto();
       pour();
       update();
       updateCreatures();
@@ -1434,16 +1375,16 @@
       const rect = canvas.getBoundingClientRect();
       mx = (e.clientX || (e.touches && e.touches[0].clientX) || -1);
       my = (e.clientY || (e.touches && e.touches[0].clientY) || -1);
-
+      
       const realX = mx - rect.left;
       const realY = my - rect.top;
 
       hoveredNavIndex = -1;
       for (let i = 0; i < navItems.length; i++) {
         const item = navItems[i];
-        if (realX >= item.x && realX <= item.x + item.w &&
-          realY >= item.y && realY <= item.y + item.h) {
-
+        if (realX >= item.x && realX <= item.x + item.w && 
+            realY >= item.y && realY <= item.y + item.h) {
+          
           // Check if wall is intact here
           const mc = Math.floor(realX / CELL);
           const mr = Math.floor(realY / CELL);
@@ -1500,7 +1441,6 @@
     });
 
     function handleTouch(e) {
-      mobileAutoDone = true;
       mouseIsDown = true;
       creatureSpawnedThisClick = false;
       updateMouse(e);
