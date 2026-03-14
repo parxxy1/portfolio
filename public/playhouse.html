@@ -59,8 +59,7 @@
     .page {
       max-width: 1600px;
       margin: 0 auto;
-      padding: 29px 650px 300px 150px;
-      /* Added 300px bottom padding */
+      padding: 29px 150px 300px 150px;
       display: flex;
       flex-direction: column;
       gap: 82px;
@@ -71,9 +70,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-left: -101px;
-      margin-right: -601px;
-      padding: 0 49px;
+      width: 100%;
+      padding: 0;
     }
 
     .top-bar .home-link {
@@ -132,7 +130,7 @@
       color: #b12f4f;
       /* Playhouse Red */
       line-height: 1.1;
-      width: 542px;
+      max-width: 542px;
     }
 
     .hero-details {
@@ -178,7 +176,7 @@
       height: 153.6%;
       left: 0;
       top: -26.53%;
-      object-fit: cover;
+      object-fit: contain;
     }
 
     /* ── Text sections ────────────────────────────────────── */
@@ -233,7 +231,8 @@
       align-items: center;
       gap: -6px;
       /* Overlap between columns */
-      width: 900px;
+      width: 100%;
+      max-width: 900px;
     }
 
     .review-main {
@@ -281,8 +280,9 @@
     }
 
     .tiktok-grid-1 {
-      width: 1075px;
-      height: 287px;
+      width: 100%;
+      max-width: 1075px;
+      height: auto;
       overflow: hidden;
       display: flex;
       gap: -15px;
@@ -298,8 +298,9 @@
     }
 
     .tiktok-grid-2 {
-      width: 988px;
-      height: 426px;
+      width: 100%;
+      max-width: 988px;
+      height: auto;
       display: flex;
       gap: -15px;
       /* Overlap requested by user */
@@ -314,8 +315,9 @@
 
     /* ── Banned Section ───────────────────────────────────── */
     .banned-wrap {
-      width: 543px;
-      height: 426px;
+      width: 100%;
+      max-width: 543px;
+      height: auto;
       position: relative;
     }
 
@@ -327,8 +329,10 @@
 
     /* ── Design Section ───────────────────────────────────── */
     .website-wrap {
-      width: 828px;
-      height: 473px;
+      width: 100%;
+      max-width: 828px;
+      height: auto;
+      aspect-ratio: 828 / 473;
       overflow: hidden;
       position: relative;
     }
@@ -354,13 +358,11 @@
     /* ── Responsive ──────────────────────────────────────── */
     @media (max-width: 1200px) {
       .page {
-        padding: 24px 60px;
+        padding: 40px 100px;
         gap: 60px;
       }
 
       .top-bar {
-        margin-left: 0;
-        margin-right: 0;
         padding: 0;
       }
 

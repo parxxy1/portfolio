@@ -59,7 +59,7 @@
     .page {
       max-width: 1600px;
       margin: 0 auto;
-      padding: 29px 650px 300px 150px;
+      padding: 29px 150px 300px 150px;
       display: flex;
       flex-direction: column;
       gap: 82px;
@@ -70,9 +70,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-left: -101px;
-      margin-right: -601px;
-      padding: 0 49px;
+      width: 100%;
+      padding: 0;
     }
 
     .top-bar .home-link {
@@ -128,7 +127,8 @@
       font-size: 64px;
       font-weight: 700;
       letter-spacing: -2.56px;
-      color: #fb7a1f; /* Argo Orange */
+      color: #fb7a1f;
+      /* Argo Orange */
     }
 
     .hero-details {
@@ -142,7 +142,7 @@
       font-weight: 400;
       letter-spacing: -0.64px;
       line-height: 1.34;
-      width: 410px;
+      max-width: 410px;
     }
 
     .hero-details .stats {
@@ -150,7 +150,7 @@
       font-weight: 500;
       letter-spacing: -0.64px;
       line-height: 1.34;
-      width: 413px;
+      max-width: 413px;
     }
 
     .hero-right {
@@ -162,8 +162,9 @@
     }
 
     .hero-right .hero-mockup {
-      width: 626px;
-      height: 376px;
+      width: 100%;
+      max-width: 626px;
+      height: auto;
       object-fit: cover;
     }
 
@@ -214,8 +215,10 @@
 
     /* ── Video Section ────────────────────────────────────── */
     .video-container {
-      width: 951px;
-      height: 535px;
+      width: 100%;
+      max-width: 951px;
+      height: auto;
+      aspect-ratio: 951 / 535;
       position: relative;
       background: #000;
     }
@@ -234,16 +237,19 @@
     }
 
     .diagram-row .diagram-img {
-      width: 798px;
-      height: 423px;
+      width: 100%;
+      max-width: 798px;
+      height: auto;
       object-fit: cover;
     }
 
     /* ── Team Photo Row ────────────────────────────────────── */
     .team-photo-wrap {
-      width: 575px;
-      height: 431px;
-      overflow: hidden;
+      width: 100%;
+      max-width: 575px;
+      height: auto;
+      aspect-ratio: 575 / 431;
+      overflow: visible;
       position: relative;
     }
 
@@ -261,8 +267,9 @@
     }
 
     .multi-media-row .mockup-left {
-      width: 626px;
-      height: 376px;
+      width: 100%;
+      max-width: 626px;
+      height: auto;
       object-fit: contain;
     }
 
@@ -283,8 +290,10 @@
 
     /* ── Garden Row ────────────────────────────────────────── */
     .garden-wrap {
-      width: 659px;
-      height: 192px;
+      width: 100%;
+      max-width: 659px;
+      height: auto;
+      aspect-ratio: 659 / 192;
       overflow: hidden;
       position: relative;
     }
@@ -300,8 +309,10 @@
 
     /* ── Final Branding ────────────────────────────────────── */
     .final-branding {
-      width: 443px;
-      height: 443px;
+      width: 100%;
+      max-width: 443px;
+      height: auto;
+      aspect-ratio: 1 / 1;
       box-shadow: 0px 8px 3.8px 0px rgba(0, 0, 0, 0.25);
     }
 
@@ -312,7 +323,7 @@
     }
 
     /* ── Utility ──────────────────────────────────────────── */
-    .spaced-paragraphs p + p {
+    .spaced-paragraphs p+p {
       margin-top: 1.2em;
     }
 
@@ -323,13 +334,11 @@
     /* ── Responsive ──────────────────────────────────────── */
     @media (max-width: 1200px) {
       .page {
-        padding: 24px 60px;
+        padding: 40px 100px;
         gap: 60px;
       }
 
       .top-bar {
-        margin-left: 0;
-        margin-right: 0;
         padding: 0;
       }
 
@@ -371,7 +380,8 @@
         gap: 48px;
       }
 
-      .top-bar .home-link, nav a {
+      .top-bar .home-link,
+      nav a {
         font-size: 32px;
       }
     }
@@ -389,6 +399,7 @@
       padding: 0;
       z-index: 300;
     }
+
     .hamburger span {
       display: block;
       width: 100%;
@@ -396,6 +407,7 @@
       background: #43291f;
       border-radius: 2px;
     }
+
     .mobile-nav {
       display: none;
       position: fixed;
@@ -407,7 +419,11 @@
       justify-content: center;
       gap: 20px;
     }
-    .mobile-nav.open { display: flex; }
+
+    .mobile-nav.open {
+      display: flex;
+    }
+
     .mobile-nav a {
       font-size: 64px;
       font-weight: 700;
@@ -416,7 +432,11 @@
       text-decoration: none;
       transition: opacity 0.2s;
     }
-    .mobile-nav a:hover { opacity: 0.7; }
+
+    .mobile-nav a:hover {
+      opacity: 0.7;
+    }
+
     .mobile-nav-close {
       position: absolute;
       top: 20px;
@@ -427,9 +447,15 @@
       cursor: pointer;
       color: #43291f;
     }
+
     @media (max-width: 600px) {
-      .hamburger { display: flex; }
-      nav { display: none; }
+      .hamburger {
+        display: flex;
+      }
+
+      nav {
+        display: none;
+      }
     }
   </style>
 </head>
@@ -462,7 +488,8 @@
       <div class="hero-left">
         <h1>Argo: Digital Graffiti</h1>
         <div class="hero-details">
-          <p class="desc">A persistent AR experience built in 24 hours — leave 3D art in a real space for others to discover.</p>
+          <p class="desc">A persistent AR experience built in 24 hours — leave 3D art in a real space for others to
+            discover.</p>
           <p class="stats">· Built in a 24-hour sprint · Won 3rd place · Invited to present</p>
         </div>
       </div>
@@ -474,7 +501,11 @@
     <!-- ═══ Overview ═══ -->
     <section class="section">
       <h2>Overview</h2>
-      <p>Argo is a web-based AR prototype that lets people place 3D objects in a real physical space and have those objects persist for other users to discover later — like digital graffiti. I built it with a team of four at the Southern Utah Code Camp, a 24-hour sprint competition. We conceived the idea, designed and developed a working full-stack prototype, and demoed it by the deadline. Our team took home 3rd place and was invited to present the project at a local tech and entrepreneurship luncheon.</p>
+      <p>Argo is a web-based AR prototype that lets people place 3D objects in a real physical space and have those
+        objects persist for other users to discover later — like digital graffiti. I built it with a team of four at the
+        Southern Utah Code Camp, a 24-hour sprint competition. We conceived the idea, designed and developed a working
+        full-stack prototype, and demoed it by the deadline. Our team took home 3rd place and was invited to present the
+        project at a local tech and entrepreneurship luncheon.</p>
     </section>
 
     <!-- ═══ Video Presentation ═══ -->
@@ -489,13 +520,18 @@
     <section class="section">
       <h2>Role & Scope</h2>
       <div class="body-text spaced-paragraphs">
-        <p>I served as the frontend designer and developer on the team, and helped lead the overall product direction. My specific contributions included:</p>
+        <p>I served as the frontend designer and developer on the team, and helped lead the overall product direction.
+          My specific contributions included:</p>
         <ul>
           <li>Designing and building the UI, including the login screen and the tap-to-place interaction flow</li>
-          <li>Handling the integration between our frontend and 8th Wall’s AR platform, including finding workarounds for free-plan limitations to make the experience feel polished</li>
-          <li>Performing 3D photogrammetry scans of the environment using Scaniverse to create the spatial map the AR content anchored to.</li>
+          <li>Handling the integration between our frontend and 8th Wall’s AR platform, including finding workarounds
+            for free-plan limitations to make the experience feel polished</li>
+          <li>Performing 3D photogrammetry scans of the environment using Scaniverse to create the spatial map the AR
+            content anchored to.</li>
         </ul>
-        <p>The rest of the team brought complementary skills: Pace Thompson built the Vue app framework, Suzanne Szabo handled the Supabase backend for persistent object storage, and Jordy Voss created the 3D avatar assets users could place in the space.</p>
+        <p>The rest of the team brought complementary skills: Pace Thompson built the Vue app framework, Suzanne Szabo
+          handled the Supabase backend for persistent object storage, and Jordy Voss created the 3D avatar assets users
+          could place in the space.</p>
       </div>
     </section>
 
@@ -503,8 +539,13 @@
     <section class="section">
       <h2>The Concept</h2>
       <div class="body-text spaced-paragraphs">
-        <p>We came into the code camp with an idea: what if you could leave art in a physical space that other people could find later through their phone? Imagine walking into a room and discovering 3D objects, characters, and messages that previous visitors had placed there — a shared, evolving digital gallery layered on top of the real world.</p>
-        <p>The concept we called “digital graffiti” had potential applications beyond art — branded activations, event experiences, interactive wayfinding — but for the sprint, we focused on proving the core mechanic: can a user place a 3D object in a real space, and can another user see it there later?</p>
+        <p>We came into the code camp with an idea: what if you could leave art in a physical space that other people
+          could find later through their phone? Imagine walking into a room and discovering 3D objects, characters, and
+          messages that previous visitors had placed there — a shared, evolving digital gallery layered on top of the
+          real world.</p>
+        <p>The concept we called “digital graffiti” had potential applications beyond art — branded activations, event
+          experiences, interactive wayfinding — but for the sprint, we focused on proving the core mechanic: can a user
+          place a 3D object in a real space, and can another user see it there later?</p>
       </div>
     </section>
 
@@ -512,7 +553,11 @@
     <section class="section">
       <h2>The 24-Hour Build</h2>
       <h3>Tech Stack</h3>
-      <p class="limited-width">We chose 8th Wall for the AR layer because it was the most accessible web-based AR platform available, using A-Frame and Visual Positioning System (VPS) to anchor content to real environments. The app was built in Vue, with Supabase handling the backend so placement data could persist across sessions and users. I used Scaniverse to capture 3D photogrammetry scans of Vasion’s gym, where the code camp was held, to create the spatial map everything anchored to.</p>
+      <p class="limited-width">We chose 8th Wall for the AR layer because it was the most accessible web-based AR
+        platform available, using A-Frame and Visual Positioning System (VPS) to anchor content to real environments.
+        The app was built in Vue, with Supabase handling the backend so placement data could persist across sessions and
+        users. I used Scaniverse to capture 3D photogrammetry scans of Vasion’s gym, where the code camp was held, to
+        create the spatial map everything anchored to.</p>
     </section>
 
     <!-- ═══ Diagram ═══ -->
@@ -523,7 +568,11 @@
     <!-- ═══ The Process ═══ -->
     <section class="section">
       <h2 style="color: #fb7a1f;">The Process</h2>
-      <p class="limited-width">We divided responsibilities early and worked in parallel. While I handled the frontend and AR integration, the rest of the team built the backend and created 3D assets. 8th Wall threw us constant curveballs — free-plan restrictions, quirks in how it handled spatial anchoring, and integration challenges with our Vue app. A lot of my time was spent finding creative workarounds to make the experience feel more polished than the platform’s free tier typically allows.</p>
+      <p class="limited-width">We divided responsibilities early and worked in parallel. While I handled the frontend
+        and AR integration, the rest of the team built the backend and created 3D assets. 8th Wall threw us constant
+        curveballs — free-plan restrictions, quirks in how it handled spatial anchoring, and integration challenges with
+        our Vue app. A lot of my time was spent finding creative workarounds to make the experience feel more polished
+        than the platform’s free tier typically allows.</p>
     </section>
 
     <!-- ═══ Process Image ═══ -->
@@ -535,15 +584,25 @@
     <section class="section">
       <h2 style="color: #fb7a1f;">The 2 AM Problem</h2>
       <div class="body-text spaced-paragraphs limited-width">
-        <p>The biggest obstacle had nothing to do with code. We’d scanned the gym with Scaniverse while the overhead lights were on, and the AR system used those lighting conditions to match the 3D scan to the real environment. At around 2 AM, the venue turned off the lights so other participants could sleep. Our photogrammetry scans immediately stopped working — the system couldn’t match the dark room to the brightly lit scan.</p>
-        <p>We couldn’t test our app for roughly six hours. Pace and I stayed up the entire night, kept coding what we could, and eventually convinced the organizers to turn the lights back on so we could resume testing. It was frustrating in the moment, but it taught us something real about the constraints of environment-dependent AR — and about persistence in more ways than one.</p>
+        <p>The biggest obstacle had nothing to do with code. We’d scanned the gym with Scaniverse while the overhead
+          lights were on, and the AR system used those lighting conditions to match the 3D scan to the real environment.
+          At around 2 AM, the venue turned off the lights so other participants could sleep. Our photogrammetry scans
+          immediately stopped working — the system couldn’t match the dark room to the brightly lit scan.</p>
+        <p>We couldn’t test our app for roughly six hours. Pace and I stayed up the entire night, kept coding what we
+          could, and eventually convinced the organizers to turn the lights back on so we could resume testing. It was
+          frustrating in the moment, but it taught us something real about the constraints of environment-dependent AR —
+          and about persistence in more ways than one.</p>
       </div>
     </section>
 
     <!-- ═══ What We Made ═══ -->
     <section class="section">
       <h2 style="color: #fb7a1f;">What We Made</h2>
-      <p class="limited-width">By the end of the 24 hours, we had a working full-stack AR prototype. A user could open the web app on their phone, log in, see the mapped space through their camera, tap to place 3D objects in the real environment, and leave. Another user could then open the app in the same space and see those objects exactly where they were placed. The core promise — persistent, shared AR content anchored to a real location — was proven.</p>
+      <p class="limited-width">By the end of the 24 hours, we had a working full-stack AR prototype. A user could open
+        the web app on their phone, log in, see the mapped space through their camera, tap to place 3D objects in the
+        real environment, and leave. Another user could then open the app in the same space and see those objects
+        exactly where they were placed. The core promise — persistent, shared AR content anchored to a real location —
+        was proven.</p>
     </section>
 
     <!-- ═══ Multi Media Row ═══ -->
@@ -564,21 +623,33 @@
     <!-- ═══ Outcome ═══ -->
     <section class="section">
       <h2 style="color: #fb7a1f;">Outcome</h2>
-      <p class="limited-width">We placed 3rd in the competition and were invited to present Argo at a local tech and entrepreneurship luncheon. The audience included other code camp participants and members of the broader tech community. The response was enthusiastic — people immediately understood the potential for branded experiences and event activations.</p>
+      <p class="limited-width">We placed 3rd in the competition and were invited to present Argo at a local tech and
+        entrepreneurship luncheon. The audience included other code camp participants and members of the broader tech
+        community. The response was enthusiastic — people immediately understood the potential for branded experiences
+        and event activations.</p>
     </section>
 
     <!-- ═══ Argo Team Photo ═══ -->
     <div style="aspect: 3177 / 2385; width: 589px; position: relative; overflow: hidden;">
-      <img src="assets/argo/argo-team.jpg" alt="Our team with the award" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;" />
+      <img src="assets/argo/argo-team.jpg" alt="Our team with the award"
+        style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;" />
     </div>
 
     <!-- ═══ Key Takeaways ═══ -->
     <section class="section">
       <h2 style="color: #fb7a1f;">Key Takeaways</h2>
       <div class="body-text spaced-paragraphs limited-width">
-        <p><strong>Ship under pressure.</strong> 24 hours to go from concept to working demo forced us to make fast decisions, cut scope ruthlessly, and focus on proving the one thing that mattered. We couldn’t build everything we imagined, but we shipped the core experience.</p>
-        <p><strong>Collaboration multiplies output.</strong> This was my first real experience building something meaningful with a team in a high-pressure, in-person environment. Dividing work by strength and trusting each other to deliver their piece was the only way we finished on time. I came away valuing collaborative, in-person work much more than I expected.</p>
-        <p><strong>Real-world constraints are part of the design.</strong> The lights-off incident wasn’t just a setback — it revealed a fundamental challenge in environment-dependent AR. Lighting, scanning conditions, and physical context all affect whether the technology works. Designing for the real world means accounting for the real world’s messiness.</p>
+        <p><strong>Ship under pressure.</strong> 24 hours to go from concept to working demo forced us to make fast
+          decisions, cut scope ruthlessly, and focus on proving the one thing that mattered. We couldn’t build
+          everything we imagined, but we shipped the core experience.</p>
+        <p><strong>Collaboration multiplies output.</strong> This was my first real experience building something
+          meaningful with a team in a high-pressure, in-person environment. Dividing work by strength and trusting each
+          other to deliver their piece was the only way we finished on time. I came away valuing collaborative,
+          in-person work much more than I expected.</p>
+        <p><strong>Real-world constraints are part of the design.</strong> The lights-off incident wasn’t just a setback
+          — it revealed a fundamental challenge in environment-dependent AR. Lighting, scanning conditions, and physical
+          context all affect whether the technology works. Designing for the real world means accounting for the real
+          world’s messiness.</p>
       </div>
     </section>
 
@@ -586,8 +657,13 @@
     <section class="section">
       <h2 style="color: #fb7a1f;">Reflection</h2>
       <div class="body-text spaced-paragraphs limited-width">
-        <p>Argo is the project in my portfolio that shows I can collaborate, ship under extreme constraints, and work across the full stack from UI design to AR integration to physical environment scanning. It’s also the project that made me realize how much I thrive in team environments — the energy of building something together in person, under a deadline, with people who bring different skills to the table.</p>
-        <p>The concept of persistent, shared AR has real commercial potential, and I’d love to revisit it with more time and fewer free-plan restrictions. But even as a 24-hour prototype, Argo proved the idea works — and that was the whole point.</p>
+        <p>Argo is the project in my portfolio that shows I can collaborate, ship under extreme constraints, and work
+          across the full stack from UI design to AR integration to physical environment scanning. It’s also the project
+          that made me realize how much I thrive in team environments — the energy of building something together in
+          person, under a deadline, with people who bring different skills to the table.</p>
+        <p>The concept of persistent, shared AR has real commercial potential, and I’d love to revisit it with more time
+          and fewer free-plan restrictions. But even as a 24-hour prototype, Argo proved the idea works — and that was
+          the whole point.</p>
       </div>
     </section>
 
@@ -602,8 +678,8 @@
     var ham = document.getElementById('hamburger');
     var mobileNav = document.getElementById('mobile-nav');
     var closeBtn = document.getElementById('mobile-nav-close');
-    ham.addEventListener('click', function() { mobileNav.classList.add('open'); ham.style.display = 'none'; });
-    closeBtn.addEventListener('click', function() { mobileNav.classList.remove('open'); ham.style.display = ''; });
+    ham.addEventListener('click', function () { mobileNav.classList.add('open'); ham.style.display = 'none'; });
+    closeBtn.addEventListener('click', function () { mobileNav.classList.remove('open'); ham.style.display = ''; });
   </script>
 </body>
 

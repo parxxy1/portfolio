@@ -59,7 +59,7 @@
     .page {
       max-width: 1600px;
       margin: 0 auto;
-      padding: 29px 650px 300px 150px;
+      padding: 29px 150px 300px 150px;
       display: flex;
       flex-direction: column;
       gap: 82px;
@@ -70,9 +70,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-left: -101px;
-      margin-right: -601px;
-      padding: 0 49px;
+      width: 100%;
+      padding: 0;
     }
 
     .top-bar .home-link {
@@ -143,7 +142,7 @@
       font-weight: 400;
       letter-spacing: -0.64px;
       line-height: 1.34;
-      width: 410px;
+      max-width: 410px;
     }
 
     .hero-details .stats {
@@ -151,7 +150,7 @@
       font-weight: 500;
       letter-spacing: -0.64px;
       line-height: 1.34;
-      width: 413px;
+      max-width: 413px;
     }
 
     .hero-right {
@@ -162,15 +161,17 @@
     }
 
     .hero-right .logo-img {
-      width: 434px;
-      height: 109px;
+      width: 100%;
+      max-width: 434px;
+      height: auto;
       object-fit: cover;
       flex-shrink: 0;
     }
 
     .hero-right .laptop-img {
-      width: 349px;
-      height: 262px;
+      width: 100%;
+      max-width: 349px;
+      height: auto;
       object-fit: cover;
       flex-shrink: 0;
     }
@@ -223,8 +224,10 @@
 
     /* Platform screenshot — straight display */
     .platform-wrap {
-      width: 475px;
-      height: 290px;
+      width: 100%;
+      max-width: 475px;
+      height: auto;
+      aspect-ratio: 475 / 290;
       overflow: hidden;
       position: relative;
     }
@@ -237,8 +240,10 @@
 
     /* Chat screenshot — cropped taller than container */
     .chat-wrap {
-      width: 689px;
-      height: 240px;
+      width: 100%;
+      max-width: 689px;
+      height: auto;
+      aspect-ratio: 689 / 240;
       overflow: hidden;
       position: relative;
     }
@@ -307,8 +312,10 @@
 
     /* Hit counter — cropped container */
     .hit-counter-wrap {
-      width: 312px;
-      height: 127px;
+      width: 100%;
+      max-width: 312px;
+      height: auto;
+      aspect-ratio: 312 / 127;
       overflow: hidden;
       position: relative;
     }
@@ -324,8 +331,10 @@
 
     /* Final screenshot */
     .final-wrap {
-      width: 677px;
-      height: 375px;
+      width: 100%;
+      max-width: 677px;
+      height: auto;
+      aspect-ratio: 677 / 375;
       overflow: hidden;
       position: relative;
     }
@@ -348,13 +357,11 @@
     /* ── Responsive ──────────────────────────────────────── */
     @media (max-width: 1200px) {
       .page {
-        padding: 24px 60px;
+        padding: 40px 100px;
         gap: 60px;
       }
 
       .top-bar {
-        margin-left: 0;
-        margin-right: 0;
         padding: 0;
       }
 

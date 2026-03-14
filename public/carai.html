@@ -48,7 +48,7 @@
     .page {
       max-width: 1600px;
       margin: 0 auto;
-      padding: 29px 650px 300px 150px;
+      padding: 29px 150px 300px 150px;
       display: flex;
       flex-direction: column;
       gap: 82px;
@@ -59,9 +59,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-left: -101px;
-      margin-right: -601px;
-      padding: 0 49px;
+      width: 100%;
+      padding: 0;
     }
 
     .home-link {
@@ -115,7 +114,7 @@
       font-weight: 400;
       letter-spacing: -0.64px;
       line-height: 1.34;
-      width: 410px;
+      max-width: 410px;
     }
 
     .hero-stats {
@@ -135,8 +134,10 @@
 
     /* Phone mockup: 338×312 */
     .hero-phone {
-      width: 338px;
-      height: 312px;
+      width: 100%;
+      max-width: 338px;
+      height: auto;
+      aspect-ratio: 338 / 312;
       flex-shrink: 0;
       position: relative;
       overflow: hidden;
@@ -280,8 +281,10 @@
 
     /* LED states image: 779×313 */
     .led-states-box {
-      width: 779px;
-      height: 313px;
+      width: 100%;
+      max-width: 779px;
+      height: auto;
+      aspect-ratio: 779 / 313;
       position: relative;
       overflow: hidden;
       flex-shrink: 0;
@@ -354,8 +357,8 @@
 
     /* ── Responsive ────────────────────────────────────────── */
     @media (max-width: 1200px) {
-      .page { padding: 24px 40px; gap: 60px; }
-      .top-bar { margin-left: 0; margin-right: 0; padding: 0; }
+      .page { padding: 40px 100px; gap: 60px; }
+      .top-bar { padding: 0; }
       .hero { flex-direction: column; }
       .hero-left { width: 100%; flex: none; }
       .hero-desc, .hero-stats { width: 100%; }
