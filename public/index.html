@@ -634,7 +634,7 @@
     }
 
     // ── Tool menu ─────────────────────────────────────────────────────────────
-    let activeTool = 'creature';
+    let activeTool = 'sand';
     let bombCooldown = 0;
     let hasClickedMenu = false;
 
@@ -1390,36 +1390,34 @@
     const blob = new Blob([workerCode], { type: 'application/javascript' });
     const worker = new Worker(URL.createObjectURL(blob));
 
-    // ── Mobile auto-pour ──────────────────────────────────────────────────────
-    const isMobile = ('ontouchstart' in window || navigator.maxTouchPoints > 0);
-    let mobileAutoX = -1, mobileAutoY = -1, mobileVx = 1.8, mobileVy = 1.1;
-    let mobileAutoDone = false;
+    // ── Auto-pour ─────────────────────────────────────────────────────────────
+    let autoPourX = -1, autoPourY = -1, autoPourVx = 1.8, autoPourVy = 1.1;
+    let autoPourDone = false;
+    let initialInteraction = false;
 
-    function updateMobileAuto() {
-      if (!isMobile || mobileAutoDone) return;
-      if (mobileAutoX < 0) {
-        mobileAutoX = canvas.width * (0.15 + Math.random() * 0.5);
-        mobileAutoY = canvas.height * (0.15 + Math.random() * 0.4);
-        mobileVx = (Math.random() - 0.5) * 3.5;
-        mobileVy = (Math.random() - 0.5) * 2.5;
+    function updateAutoPour() {
+      if (autoPourDone) return;
+      if (autoPourX < 0) {
+        autoPourX = canvas.width * (0.10 + Math.random() * 0.80);
+        autoPourY = 20; // Pour from the top
+        autoPourVx = (Math.random() - 0.5) * 4.0;
+        autoPourVy = 0;
       }
-      mobileAutoX += mobileVx;
-      mobileAutoY += mobileVy;
-      const px = canvas.width * 0.08;
-      const pyTop = canvas.height * 0.08;
-      const pyBot = canvas.height * 0.70;
-      if (mobileAutoX < px || mobileAutoX > canvas.width - px) mobileVx *= -1;
-      if (mobileAutoY < pyTop || mobileAutoY > pyBot) mobileVy *= -1;
-      if (Math.random() < 0.01) mobileVx += (Math.random() - 0.5) * 1.5;
-      if (Math.random() < 0.01) mobileVy += (Math.random() - 0.5) * 1.5;
-      mobileVx = Math.max(-4, Math.min(4, mobileVx));
-      mobileVy = Math.max(-3, Math.min(3, mobileVy));
-      mx = mobileAutoX;
-      my = mobileAutoY;
+      autoPourX += autoPourVx;
+      autoPourY += autoPourVy;
+      const px = canvas.width * 0.05;
+      if (autoPourX < px || autoPourX > canvas.width - px) autoPourVx *= -1;
+      
+      // Randomly shift velocity
+      if (Math.random() < 0.02) autoPourVx += (Math.random() - 0.5) * 2.0;
+      autoPourVx = Math.max(-5, Math.min(5, autoPourVx));
+      
+      mx = autoPourX;
+      my = autoPourY;
     }
 
     function loop() {
-      updateMobileAuto();
+      updateAutoPour();
       pour();
       update();
       updateCreatures();
@@ -1431,6 +1429,7 @@
 
     // Use touch events as well
     function updateMouse(e) {
+      if (!autoPourDone) autoPourDone = true;
       const rect = canvas.getBoundingClientRect();
       mx = (e.clientX || (e.touches && e.touches[0].clientX) || -1);
       my = (e.clientY || (e.touches && e.touches[0].clientY) || -1);
@@ -1461,6 +1460,7 @@
     canvas.addEventListener('mousemove', updateMouse);
     canvas.addEventListener('touchmove', updateMouse, { passive: true });
     canvas.addEventListener('mousedown', function (e) {
+      autoPourDone = true;
       mouseIsDown = true;
       creatureSpawnedThisClick = false;
       updateMouse(e);
@@ -1500,7 +1500,7 @@
     });
 
     function handleTouch(e) {
-      mobileAutoDone = true;
+      autoPourDone = true;
       mouseIsDown = true;
       creatureSpawnedThisClick = false;
       updateMouse(e);
