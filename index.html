@@ -110,27 +110,8 @@
     }
 
     /* We'll draw the text on the canvas so it interacts with sand */
-    #ui-layer nav { display: none; }
-
-    @media (max-width: 768px) {
-      #menu {
-        right: 0;
-        left: 0;
-        top: auto;
-        bottom: 20px;
-        transform: none;
-        flex-direction: row;
-        width: 100%;
-        justify-content: center;
-        flex-wrap: wrap;
-        padding: 0 10px;
-        gap: 8px;
-      }
-      .tool-btn {
-        padding: 8px 12px;
-        font-size: 14px;
-        border-radius: 10px;
-      }
+    #ui-layer nav {
+      display: none;
     }
   </style>
 </head>
@@ -208,7 +189,7 @@
         const filter = this.ctx.createBiquadFilter();
         filter.type = 'lowpass';
         filter.frequency.value = 800 + Math.random() * 400;
-        
+
         const g = this.ctx.createGain();
         g.gain.setValueAtTime(0.05, this.ctx.currentTime);
         g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.05);
@@ -385,16 +366,16 @@
         const hue2rgb = (p, q, t) => {
           if (t < 0) t += 1;
           if (t > 1) t -= 1;
-          if (t < 1/6) return p + (q - p) * 6 * t;
-          if (t < 1/2) return q;
-          if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+          if (t < 1 / 6) return p + (q - p) * 6 * t;
+          if (t < 1 / 2) return q;
+          if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
           return p;
         };
         const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
         const p = 2 * l - q;
-        r = hue2rgb(p, q, h + 1/3);
+        r = hue2rgb(p, q, h + 1 / 3);
         g = hue2rgb(p, q, h);
-        b = hue2rgb(p, q, h - 1/3);
+        b = hue2rgb(p, q, h - 1 / 3);
       }
       return ((0xFF << 24) | (Math.round(b * 255) << 16) | (Math.round(g * 255) << 8) | Math.round(r * 255)) >>> 0;
     }
@@ -520,7 +501,7 @@
         { text: 'contact', url: 'contact.html' }
       ];
 
-      const navFontSize = 64; 
+      const navFontSize = 64;
       const navFontWeight = 700;
       const navLetterSpacing = -2.56;
       oc.font = `${navFontWeight} ${navFontSize}px 'Stolzl', sans-serif`;
@@ -541,16 +522,16 @@
         totalNavWidth += measureTextWithSpacing(l.text) + (i < links.length - 1 ? navSpacing : 0);
       });
 
-      let startX = W - totalNavWidth - 49; 
+      let startX = W - totalNavWidth - 49;
       if (W < 768) {
-        startX = (W - totalNavWidth) / 2; 
+        startX = W - totalNavWidth - 24;
         oc.font = `${navFontWeight} 36px 'Stolzl', sans-serif`;
       }
 
       links.forEach((l, i) => {
         const tw = measureTextWithSpacing(l.text);
-        const ty = (W < 768 ? 20 : 29) + (W < 768 ? 36 : navFontSize); 
-        
+        const ty = (W < 768 ? 40 : 49) + (W < 768 ? 36 : navFontSize);
+
         let charX = startX;
         for (let char of l.text) {
           oc.fillText(char, charX, ty);
@@ -571,7 +552,7 @@
           outer: for (let py = 0; py < CELL; py++)
             for (let pxc = 0; pxc < CELL; pxc++)
               if (px[((r * CELL + py) * W + c * CELL + pxc) * 4 + 3] > 32) { hit = true; break outer; }
-          
+
           if (hit) {
             const idx = ci(c, r);
             walls[idx] = 1;
@@ -581,7 +562,7 @@
             for (let i = 0; i < navItems.length; i++) {
               const item = navItems[i];
               if (worldX >= item.x - CELL && worldX <= item.x + item.w + CELL &&
-                  worldY >= item.y - CELL && worldY <= item.y + item.h + CELL) {
+                worldY >= item.y - CELL && worldY <= item.y + item.h + CELL) {
                 // Double check with actual pixel mapping if needed, but bounding box is close enough for tagging
                 wallNavID[idx] = i;
                 break;
@@ -626,7 +607,7 @@
         btn.classList.add('active');
 
         if (activeTool === 'concrete') {
-          densitySlider.value = (window.innerWidth < 768) ? 8 : 16;
+          densitySlider.value = 16;
         } else if (activeTool === 'vine') {
           densitySlider.value = 2;
         } else if (activeTool === 'creature' || activeTool === 'cat') {
@@ -645,7 +626,7 @@
 
     function pour() {
       if (mx < 0) return;
-      audio.init(); 
+      audio.init();
       // Sand pours on hover initially. After menu clicked, ALL tools require click-and-hold
       if (!mouseIsDown) {
         if (activeTool === 'sand' && !hasClickedMenu) {
@@ -687,7 +668,7 @@
             }
           }
         }
-        if (placed) bombCooldown = 5; 
+        if (placed) bombCooldown = 5;
         return;
       }
 
@@ -735,7 +716,7 @@
       for (let n = 0; n < rate; n++) {
         const dc = (Math.random() * (spread * 2 + 1) | 0) - spread;
         const dr = (Math.random() * (spread * 2 + 1) | 0) - spread;
-        
+
         // SNAP TO 2x2 CLUSTER (4px CHUNK)
         const sc = Math.floor((mc + dc) / 2) * 2;
         const sr = Math.floor((mr + dr) / 2) * 2;
@@ -751,7 +732,7 @@
           }
 
           if (canPlace) {
-            const col = (type === SAND) 
+            const col = (type === SAND)
               ? RAINBOW_BASE + ((Math.floor((sandHue / 360) * RAINBOW_COUNT) + (Math.random() * cnt | 0)) % RAINBOW_COUNT)
               : (Math.random() * cnt | 0) + base;
 
@@ -850,15 +831,15 @@
           if (t === EMPTY || t === FIRE || t === ROOT || t === VINE || t === CONCRETE) continue;
 
           const isClusterTop = (c % 2 === 0 && r % 2 === 0 &&
-                               grid[ci(c + 1, r)] === t &&
-                               grid[ci(c, r + 1)] === t &&
-                               grid[ci(c + 1, r + 1)] === t);
+            grid[ci(c + 1, r)] === t &&
+            grid[ci(c, r + 1)] === t &&
+            grid[ci(c + 1, r + 1)] === t);
 
           if (isClusterTop) {
             let moved = false;
             if (free(c, r + 2) && free(c + 1, r + 2)) {
-              move(i, ci(c, r + 2)); move(ci(c+1, r), ci(c+1, r+2));
-              move(ci(c, r+1), ci(c, r+3)); move(ci(c+1, r+1), ci(c+1, r+3));
+              move(i, ci(c, r + 2)); move(ci(c + 1, r), ci(c + 1, r + 2));
+              move(ci(c, r + 1), ci(c, r + 3)); move(ci(c + 1, r + 1), ci(c + 1, r + 3));
               moved = true;
             } else if (t === SAND || t === BOMB) {
               const d = lf ? -2 : 2;
@@ -873,7 +854,7 @@
               }
             }
             if (moved) {
-              visited[i] = visited[ci(c+1, r)] = visited[ci(c, r+1)] = visited[ci(c+1, r+1)] = frameCount;
+              visited[i] = visited[ci(c + 1, r)] = visited[ci(c, r + 1)] = visited[ci(c + 1, r + 1)] = frameCount;
               continue;
             }
           }
@@ -912,7 +893,7 @@
         if (type === BOMB) {
           if (gridTimer[i] === 0) {
             const c = i % cols, r = Math.floor(i / cols);
-            const dirs = [{dc:0, dr:1}, {dc:0, dr:-1}, {dc:1, dr:0}, {dc:-1, dr:0}];
+            const dirs = [{ dc: 0, dr: 1 }, { dc: 0, dr: -1 }, { dc: 1, dr: 0 }, { dc: -1, dr: 0 }];
             for (const d of dirs) {
               const nc = c + d.dc, nr = r + d.dr;
               if (ok(nc, nr) && grid[ci(nc, nr)] === FIRE) { igniteCluster(i); break; }
@@ -952,9 +933,9 @@
                 let hasSup = false;
                 for (let sy = -1; sy <= 1; sy++) {
                   for (let sx = -1; sx <= 1; sx++) {
-                    if (ok(nc+sx, nr+sy)) {
-                      const g = grid[ci(nc+sx, nr+sy)];
-                      if (g === VINE || g === ROOT || g === CONCRETE || walls[ci(nc+sx, nr+sy)]) hasSup = true;
+                    if (ok(nc + sx, nr + sy)) {
+                      const g = grid[ci(nc + sx, nr + sy)];
+                      if (g === VINE || g === ROOT || g === CONCRETE || walls[ci(nc + sx, nr + sy)]) hasSup = true;
                     }
                   }
                 }
@@ -1107,7 +1088,7 @@
         if (grid[i] !== BOMB || gridTimer[i] > 0) continue;
         gridTimer[i] = BOMB_FUSE;
         const c = i % cols, r = Math.floor(i / cols);
-        const dirs = [{dc:0, dr:1}, {dc:0, dr:-1}, {dc:1, dr:0}, {dc:-1, dr:0}];
+        const dirs = [{ dc: 0, dr: 1 }, { dc: 0, dr: -1 }, { dc: 1, dr: 0 }, { dc: -1, dr: 0 }];
         for (const d of dirs) {
           const nc = c + d.dc, nr = r + d.dr;
           if (ok(nc, nr)) {
@@ -1176,7 +1157,7 @@
           cat.c = nc;
           if (Math.random() < 0.2) audio.playStep();
         } else if (ok(nc, cr) && ok(nc, cr - 1) && ok(nc, cr - 2) && ok(nc, cr - 3)) {
-          if (!solid(nc, cr - 1)) { cat.c = nc; cat.r = cr - 1; audio.playStep(); } 
+          if (!solid(nc, cr - 1)) { cat.c = nc; cat.r = cr - 1; audio.playStep(); }
           else if (!solid(nc, cr - 2) && !solid(cat.c, cr - 1)) { cat.c = nc; cat.r = cr - 2; audio.playStep(); }
           else if (!solid(nc, cr - 3) && !solid(cat.c, cr - 1) && !solid(cat.c, cr - 2)) { cat.c = nc; cat.r = cr - 3; audio.playStep(); }
           else cat.dir *= -1;
@@ -1217,9 +1198,9 @@
               for (let py = 0; py < CELL * 2; py++) {
                 const base = (r * CELL + py) * canvas.width + c * CELL;
                 for (let pxc = 0; pxc < CELL * 2; pxc++) {
-                   if (c * CELL + pxc < canvas.width && r * CELL + py < canvas.height) {
-                     imgBuf[base + pxc] = col;
-                   }
+                  if (c * CELL + pxc < canvas.width && r * CELL + py < canvas.height) {
+                    imgBuf[base + pxc] = col;
+                  }
                 }
               }
             }
@@ -1375,16 +1356,16 @@
       const rect = canvas.getBoundingClientRect();
       mx = (e.clientX || (e.touches && e.touches[0].clientX) || -1);
       my = (e.clientY || (e.touches && e.touches[0].clientY) || -1);
-      
+
       const realX = mx - rect.left;
       const realY = my - rect.top;
 
       hoveredNavIndex = -1;
       for (let i = 0; i < navItems.length; i++) {
         const item = navItems[i];
-        if (realX >= item.x && realX <= item.x + item.w && 
-            realY >= item.y && realY <= item.y + item.h) {
-          
+        if (realX >= item.x && realX <= item.x + item.w &&
+          realY >= item.y && realY <= item.y + item.h) {
+
           // Check if wall is intact here
           const mc = Math.floor(realX / CELL);
           const mr = Math.floor(realY / CELL);
