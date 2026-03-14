@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <title>PxGames — Parker Bryan</title>
+  <meta name="description"
+    content="PxGames: A gaming platform built at 14 when school blocked every game site. 400 users, 4,000+ views, 4 years running. Case study by Parker." />
+  <style>
+    @font-face {
+      font-family: 'Stolzl';
+      src: local('Stolzl Bold'), local('Stolzl-Bold');
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Stolzl';
+      src: local('Stolzl Medium'), local('Stolzl-Medium');
+      font-weight: 500;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Stolzl';
+      src: local('Stolzl Book'), local('Stolzl-Book');
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Stolzl';
+      src: local('Stolzl Light'), local('Stolzl-Light');
+      font-weight: 300;
+      font-style: normal;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: #fdffff;
+      font-family: 'Stolzl', sans-serif;
+      color: #434343;
+      line-height: 1.216;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .page {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 29px 650px 300px 150px;
+      display: flex;
+      flex-direction: column;
+      gap: 82px;
+    }
+
+    /* ── Top nav ──────────────────────────────────────────── */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-left: -101px;
+      margin-right: -601px;
+      padding: 0 49px;
+    }
+
+    .top-bar .home-link {
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: -2.56px;
+      color: #43291f;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .top-bar .home-link:hover {
+      opacity: 0.7;
+    }
+
+    nav {
+      display: flex;
+      gap: 40px;
+      align-items: center;
+    }
+
+    nav a {
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: -2.56px;
+      color: #43291f;
+      text-decoration: none;
+      line-height: 1.216;
+      transition: opacity 0.2s;
+    }
+
+    nav a:hover {
+      opacity: 0.7;
+    }
+
+    /* ── Hero ─────────────────────────────────────────────── */
+    .hero {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      width: 100%;
+    }
+
+    .hero-left {
+      flex: 0 0 377px;
+      display: flex;
+      flex-direction: column;
+      gap: 17px;
+      justify-content: center;
+    }
+
+    .hero-left h1 {
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: -1.92px;
+      color: #ea4949;
+      line-height: 1.216;
+    }
+
+    .hero-details {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .hero-details .desc {
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: -0.64px;
+      line-height: 1.34;
+      width: 410px;
+    }
+
+    .hero-details .stats {
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: -0.64px;
+      line-height: 1.34;
+      width: 413px;
+    }
+
+    .hero-right {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      padding-left: 113px;
+    }
+
+    .hero-right .logo-img {
+      width: 434px;
+      height: 109px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .hero-right .laptop-img {
+      width: 349px;
+      height: 262px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    /* ── Text sections ────────────────────────────────────── */
+    .section {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .section.gap-14 {
+      gap: 14px;
+    }
+
+    .section.gap-27 {
+      gap: 27px;
+    }
+
+    .section h2 {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -1.44px;
+      line-height: 1.216;
+      color: #ea4949;
+    }
+
+    .section h3 {
+      font-size: 36px;
+      font-weight: 300;
+      letter-spacing: -1.44px;
+      line-height: 1.216;
+      color: #ea4949;
+    }
+
+    .section p,
+    .section .body-text {
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: -0.64px;
+      line-height: 1.34;
+      max-width: 100%;
+    }
+
+    /* ── Media ────────────────────────────────────────────── */
+    .media-wrap img {
+      display: block;
+    }
+
+    /* Platform screenshot — straight display */
+    .platform-wrap {
+      width: 475px;
+      height: 290px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .platform-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Chat screenshot — cropped taller than container */
+    .chat-wrap {
+      width: 689px;
+      height: 240px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .chat-wrap img {
+      position: absolute;
+      width: 100.54%;
+      height: 112.92%;
+      left: -0.05%;
+      top: 0;
+      max-width: none;
+      object-fit: cover;
+    }
+
+    /* Tournament photos */
+    .tournament-photos {
+      display: flex;
+      align-items: center;
+      gap: 43px;
+    }
+
+    /* Photo 1: rotated -90deg with crop */
+    .photo-rotated-wrap {
+      width: 221px;
+      height: 145px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .photo-rotated-wrap .inner {
+      width: 145px;
+      height: 221px;
+      overflow: hidden;
+      position: relative;
+      transform: rotate(-90deg);
+    }
+
+    .photo-rotated-wrap .inner img {
+      position: absolute;
+      width: 100%;
+      height: 142.07%;
+      left: 0;
+      top: -21.03%;
+      max-width: none;
+      object-fit: cover;
+    }
+
+    /* Photo 2: portrait with slight crop */
+    .photo-portrait-wrap {
+      width: 145px;
+      height: 314px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .photo-portrait-wrap img {
+      position: absolute;
+      width: 100%;
+      height: 99.99%;
+      left: 0;
+      top: 0;
+      max-width: none;
+      object-fit: cover;
+    }
+
+    /* Hit counter — cropped container */
+    .hit-counter-wrap {
+      width: 312px;
+      height: 127px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hit-counter-wrap img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      max-width: none;
+    }
+
+    /* Final screenshot */
+    .final-wrap {
+      width: 677px;
+      height: 375px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .final-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ── Utility ──────────────────────────────────────────── */
+    .spaced-paragraphs p+p {
+      margin-top: 1.2em;
+    }
+
+    .limited-width {
+      max-width: 590px !important;
+    }
+
+    /* ── Responsive ──────────────────────────────────────── */
+    @media (max-width: 1200px) {
+      .page {
+        padding: 24px 60px;
+        gap: 60px;
+      }
+
+      .top-bar {
+        margin-left: 0;
+        margin-right: 0;
+        padding: 0;
+      }
+
+      .hero {
+        flex-direction: column;
+        gap: 40px;
+      }
+
+      .hero-left {
+        width: 100%;
+        flex: none;
+      }
+
+      .hero-details .desc,
+      .hero-details .stats {
+        width: 100%;
+      }
+
+      .hero-right {
+        padding-left: 0;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+
+      .hero-right .logo-img {
+        width: 300px;
+        height: auto;
+      }
+
+      .hero-right .laptop-img {
+        width: 250px;
+        height: auto;
+      }
+
+      .platform-wrap,
+      .chat-wrap,
+      .final-wrap {
+        max-width: 100%;
+        height: auto;
+        aspect-ratio: attr(width) / attr(height);
+      }
+
+      .platform-wrap { aspect-ratio: 475 / 290; }
+      .chat-wrap { aspect-ratio: 689 / 240; }
+      .final-wrap { aspect-ratio: 677 / 375; }
+
+      .platform-wrap img,
+      .chat-wrap img,
+      .final-wrap img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 20px 24px;
+        gap: 48px;
+      }
+
+      .top-bar .home-link,
+      nav a {
+        font-size: 32px;
+      }
+
+      .hero-left h1 {
+        font-size: 36px;
+      }
+
+      .tournament-photos {
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .tournament-photos .photo-rotated {
+        transform: none;
+        width: 100%;
+        height: auto;
+      }
+
+      .tournament-photos .photo-portrait {
+        width: 100%;
+        height: auto;
+      }
+    }
+
+    /* ── Hamburger menu ──────────────────────────────────── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 32px;
+      height: 22px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      z-index: 300;
+    }
+    .hamburger span {
+      display: block;
+      width: 100%;
+      height: 3px;
+      background: #43291f;
+      border-radius: 2px;
+    }
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #fdffff;
+      z-index: 250;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a {
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: -2.56px;
+      color: #43291f;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .mobile-nav a:hover { opacity: 0.7; }
+    .mobile-nav-close {
+      position: absolute;
+      top: 20px;
+      right: 32px;
+      font-size: 36px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #43291f;
+    }
+    @media (max-width: 600px) {
+      .hamburger { display: flex; }
+      nav { display: none; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="page">
+
+    <!-- ═══ Nav ═══ -->
+    <header class="top-bar">
+      <a href="index.html" class="home-link">home</a>
+      <nav>
+        <a href="work.html">work</a>
+        <a href="about.html">about</a>
+        <a href="contact.html">contact</a>
+      </nav>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </header>
+    <div class="mobile-nav" id="mobile-nav">
+      <button class="mobile-nav-close" id="mobile-nav-close">✕</button>
+      <a href="work.html">work</a>
+      <a href="about.html">about</a>
+      <a href="contact.html">contact</a>
+    </div>
+
+    <!-- ═══ Hero ═══ -->
+    <section class="hero">
+      <div class="hero-left">
+        <h1>PxGames</h1>
+        <div class="hero-details">
+          <p class="desc">A gaming platform I built at 14 when my school blocked every game site. It became the only one that mattered.</p>
+          <p class="stats">· 400 users · 4,000+ views · 4 years running</p>
+        </div>
+      </div>
+      <div class="hero-right">
+        <img class="logo-img" src="assets/pxgames/pxgamelogo.png" alt="PxGames Logo" />
+        <img class="laptop-img" src="assets/pxgames/macbook-mockup.png" alt="PxGames on MacBook" />
+      </div>
+    </section>
+
+    <!-- ═══ Overview ═══ -->
+    <section class="section">
+      <h2>Overview</h2>
+      <div class="body-text spaced-paragraphs">
+        <p>PX Games is a gaming platform I built in 2018 when I was 14 years old and in 8th grade. When my school's administration blocked every popular browser game site on the network, I created my own — a simple site that hosted Flash games, featured a live chat room, and eventually grew into a community with tournaments, prize money, and a dedicated user base. The site ran for over four years, accumulated roughly 4,000 views and around 400 users, and continued to be used by students long after I left the school.</p>
+        <p>It was the first real thing I ever built for other people, and it's the project that made me fall in love with making things.</p>
+      </div>
+    </section>
+
+    <!-- ═══ Role & Scope ═══ -->
+    <section class="section">
+      <h2>Role &amp; Scope</h2>
+      <p>Solo project. I built the site, sourced and hosted the games, managed the community, organized in-person tournaments, and maintained the platform with daily updates for years.</p>
+    </section>
+
+    <!-- ═══ The Problem ═══ -->
+    <section class="section">
+      <h2>The Problem</h2>
+      <div class="body-text spaced-paragraphs">
+        <p>At my middle school, students had free periods where most people headed to the computer labs to play browser games. Sites like Cool Math Games, Yippee Games, and Crazy Games were the go-to destinations. But the school district decided to crack down and blocked all the popular gaming sites network-wide. Overnight, the main thing everyone did during free time disappeared.</p>
+        <p>I saw an opportunity. If the big sites were blocked, I could build my own — one small enough and unknown enough to stay under the radar, and one I could control completely. If it ever got blocked, I could just change the URL.</p>
+      </div>
+    </section>
+
+    <!-- ═══ What I Built ═══ -->
+    <section class="section gap-14">
+      <h2>What I Built</h2>
+      <h3>The Platform</h3>
+      <div class="body-text spaced-paragraphs">
+        <p>I built the site on Google Sites — the only web builder I knew at the time. At home, I'd pull Flash game source files from the popular sites and host them on my own platform so they'd load directly when someone clicked a link. Each game opened in a new tab, clean and ready to play. I gave the site its own custom domain: pxgames.net.</p>
+        <p>I updated the site almost every day. I'd ask around school to find out what games people wanted, go home, add them, and have them live by the next morning. Because I was playing alongside my users and sitting in the same computer lab, the feedback loop was instant — I could hear what people wanted and ship it the same day.</p>
+      </div>
+    </section>
+
+    <!-- ═══ Platform Screenshot ═══ -->
+    <div class="platform-wrap">
+      <img src="assets/pxgames/platform-screenshot.png" alt="PxGames platform screenshot" />
+    </div>
+
+    <!-- ═══ Community Features ═══ -->
+    <section class="section">
+      <h2 class="limited-width">Community Features</h2>
+      <div class="body-text spaced-paragraphs limited-width">
+        <p>I wanted PX Games to be more than just a list of game links. I embedded an HTML5 chat room directly on the site where anyone could create a username and talk to other players in real time. It turned the site into a social space — people would hang out in the chat even when they weren't actively playing.</p>
+        <p>I also provided download links for games like Minecraft, Terraria, and Super Smash Flash, so students could play popular titles without having to search sketchy download sites and risk getting viruses on the school computers. For a community of 13-to-15-year-olds, that actually mattered.</p>
+      </div>
+    </section>
+
+    <!-- ═══ Chat Screenshot ═══ -->
+    <div class="chat-wrap">
+      <img src="assets/pxgames/chat-screenshot.png" alt="PxGames chat room screenshot" />
+    </div>
+
+    <!-- ═══ The Tournaments ═══ -->
+    <section class="section">
+      <h2 class="limited-width">The Tournaments</h2>
+      <div class="body-text spaced-paragraphs limited-width">
+        <p>Once the site had a solid user base, I started organizing in-person gaming tournaments. I convinced a teacher to let me use their classroom during free period, built an RSVP form on the site, and announced events weeks in advance so people could practice. I used money from my first job — a custodian position at a local high school — to fund prize pools: $20 for first place, $10 for second, and a piece of gum and a dollar for third.</p>
+        <p>The tournaments were bracket-style, run on multiplayer games hosted on the site. One of the signature games was a thumb war button-masher where two players competed head-to-head on a Chromebook. The first tournament drew about 20 people. The events gave the site a physical dimension — PX Games wasn't just a website, it was a community that existed both online and in a real room.</p>
+      </div>
+    </section>
+
+    <!-- ═══ Growth & Staying Power ═══ -->
+    <section class="section gap-14">
+      <h2>Growth &amp; Staying Power</h2>
+      <div class="body-text spaced-paragraphs limited-width">
+        <p>PX Games spread entirely through word of mouth. Within a couple weeks of launch in April 2018, it had blown up and virtually everyone at my school was using it. I stayed anonymous, going by the username "Parxxy," which meant the administration couldn't trace the site back to me. And because I owned it, if the URL ever got blocked, I could change it instantly and have the community back online before the next free period.</p>
+        <p>The site outlived my time at the school. Even after I moved on to high school, students continued using PX Games as their primary gaming site. When I'd pick up my brothers from the school, people recognized me as the person behind the site. Years later — well after the site's active era — a former user tracked me down on Instagram and sent me a photo of the envelope from their tournament prize money. They'd kept it.</p>
+      </div>
+    </section>
+
+    <!-- ═══ Tournament Photos ═══ -->
+    <div class="tournament-photos">
+      <div class="photo-rotated-wrap">
+        <div class="inner">
+          <img src="assets/pxgames/tournament-photo-1.png" alt="Tournament photo" />
+        </div>
+      </div>
+      <div class="photo-portrait-wrap">
+        <img src="assets/pxgames/tournament-photo-2.png" alt="Tournament prize envelope" />
+      </div>
+    </div>
+
+    <!-- ═══ Staying Power Closing ═══ -->
+    <section class="section">
+      <p>The site's hit counter currently reads over 4,000 views, and the running time counter shows it's been live for over 2,500 days. Adobe's discontinuation of Flash Player at the end of 2020 is ultimately what killed the platform — the games simply stopped working. But the site is technically still up, a time capsule of what it was.</p>
+    </section>
+
+    <!-- ═══ Hit Counter ═══ -->
+    <div class="hit-counter-wrap">
+      <img src="assets/pxgames/hit-counter.png" alt="PxGames hit counter" />
+    </div>
+
+    <!-- ═══ Key Takeaways ═══ -->
+    <section class="section gap-27">
+      <h2>Key Takeaways</h2>
+      <div class="body-text spaced-paragraphs">
+        <p>Build for your users, with your users. The fastest feedback loop I've ever had was sitting in the same room as my entire user base. I could hear what people wanted, ship it that evening, and watch them use it the next day. That instinct — build close to the people you're building for — has shaped every project I've done since.</p>
+        <p>Community is a feature. The chat room and tournaments transformed PX Games from a utility into a destination. People didn't just come to play games — they came to hang out. The social layer was what made the site sticky and what made people remember it years later.</p>
+        <p>Own your platform. Because I controlled the site, I could change the URL if it got blocked, update content daily, and respond to my community in real time. That lesson — the value of owning your infrastructure rather than depending on someone else's — is something I carried directly into Blankmind Radio.</p>
+      </div>
+    </section>
+
+    <!-- ═══ Reflection ═══ -->
+    <section class="section gap-27">
+      <h2>Reflection</h2>
+      <div class="body-text spaced-paragraphs limited-width">
+        <p>PX Games is where it all started. I was 14, using the only tools I knew, solving a problem that mattered to the people around me. The UI was basic — a Google Sites template — and the tech was simple. But the product thinking was real: I identified a need, built a solution, iterated based on direct user feedback, grew a community, and sustained it for years.</p>
+        <p>Every project in my portfolio traces a line back to this one. The grassroots marketing of Blankmind Radio, the community features, the instinct to own my platform and build things that other people actually use — it all started in a middle school computer lab with a blocked game site and an idea.</p>
+      </div>
+    </section>
+
+    <!-- ═══ Final Screenshot ═══ -->
+    <div class="final-wrap">
+      <img src="assets/pxgames/final-screenshot.png" alt="PxGames website today" />
+    </div>
+
+  </div>
+
+  <script>
+    var ham = document.getElementById('hamburger');
+    var mobileNav = document.getElementById('mobile-nav');
+    var closeBtn = document.getElementById('mobile-nav-close');
+    ham.addEventListener('click', function() { mobileNav.classList.add('open'); ham.style.display = 'none'; });
+    closeBtn.addEventListener('click', function() { mobileNav.classList.remove('open'); ham.style.display = ''; });
+  </script>
+</body>
+
+</html>

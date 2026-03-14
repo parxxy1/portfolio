@@ -277,9 +277,9 @@
       </div>
 
       <div class="links-block">
-        <a href="mailto:pab74641@gmail.com" class="contact-link">email</a>
+        <a href="mailto:pab74641@gmail.com" class="contact-link" id="email-link">email</a>
         <a href="https://www.linkedin.com/in/parkerbryandesign/" target="_blank" rel="noopener" class="contact-link">linkedin</a>
-        <a href="#" class="contact-link">resume</a>
+        <a href="assets/ParkerBryanResume.pdf" target="_blank" rel="noopener" class="contact-link">resume</a>
       </div>
     </div>
   </div>
@@ -289,6 +289,14 @@
     var closeBtn = document.getElementById('mobile-nav-close');
     ham.addEventListener('click', function() { mobileNav.classList.add('open'); ham.style.display = 'none'; });
     closeBtn.addEventListener('click', function() { mobileNav.classList.remove('open'); ham.style.display = ''; });
+
+    var emailLink = document.getElementById('email-link');
+    emailLink.addEventListener('click', function(e) {
+      if (emailLink.textContent === 'email') {
+        e.preventDefault();
+        emailLink.textContent = 'pab74641@gmail.com';
+      }
+    });
   </script>
 </body>
 
