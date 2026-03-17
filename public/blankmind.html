@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/png" href="assets/favicon.png">
-  <title>Blankmind — Parker Birwin</title>
+  <title>Blankmind — Parker Bryan</title>
   <meta name="description"
     content="Blankmind Radio: A human-curated music discovery platform built to share the soundtracks of life's chapters. Case study by Parker." />
   <style>
@@ -297,6 +297,7 @@
       position: absolute;
       max-width: none;
       pointer-events: none;
+      object-fit: cover;
     }
 
     /* Two images side by side */
@@ -506,8 +507,19 @@
       .media-pair .crop-box,
       .photo-row .crop-box {
         max-width: 100% !important;
+        width: auto !important;
+        height: auto !important;
         flex: 1 1 auto;
         min-width: 140px;
+      }
+
+      .media-pair .crop-box img,
+      .photo-row .crop-box img {
+        position: relative !important;
+        width: 100% !important;
+        height: auto !important;
+        left: 0 !important;
+        top: 0 !important;
       }
 
       .photo-row {
@@ -571,7 +583,7 @@
         gap: 10px;
       }
 
-      .marketing-v2-row > div {
+      .marketing-v2-row>div {
         max-width: 100% !important;
         flex-shrink: 1;
       }
@@ -835,10 +847,9 @@
 
     <!-- ═══ V1 Media pair ═══ -->
     <div class="media-pair">
-      <!-- Gemini img: 606×274, crop: h=297.89% left=0 top=-48.95% w=100.99% -->
-      <div class="crop-box" style="width:606px; height:274px;">
-        <img src="assets/blankmind/gemini_img.png" alt="Blankmind Radio CD packaging"
-          style="height:297.89%; left:0; top:-48.95%; width:100.99%;" />
+      <div style="max-width:606px;">
+        <img src="assets/blankmind/blankmindcdcases copy.png" alt="Blankmind Radio CD packaging"
+          style="width:100%; height:auto;" />
       </div>
       <!-- iPhone 15 Pro: 468×294, crop: h=133.71% left=-12.17% top=-16.85% w=112.17% -->
       <div class="crop-box" style="width:468px; height:294px;">

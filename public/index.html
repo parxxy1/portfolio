@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/png" href="assets/favicon.png">
-  <title>Parker Birwin — Portfolio</title>
+  <title>Parker Bryan — Portfolio</title>
   <style>
     @font-face {
       font-family: 'Stolzl';
@@ -176,9 +176,12 @@
     <button class="tool-btn" data-tool="concrete">concrete</button>
     <button class="tool-btn" data-tool="vine">vine</button>
     <button class="tool-btn" data-tool="torch" style="display:none">torch</button>
-    <button class="tool-btn active" data-tool="creature">creature <span id="creature-count" style="margin-left: 4px; font-size: 11px; opacity: 0.7;">(0)</span></button>
-    <button class="tool-btn" data-tool="cat" style="display:none">cat <span id="cat-count" style="margin-left: 4px; font-size: 11px; opacity: 0.7;">(0)</span></button>
-    <input type="range" id="density-slider" min="1" max="20" value="8" style="margin-top:10px; cursor:pointer;" title="Brush Density" />
+    <button class="tool-btn active" data-tool="creature">creature <span id="creature-count"
+        style="margin-left: 4px; font-size: 11px; opacity: 0.7;">(0)</span></button>
+    <button class="tool-btn" data-tool="cat" style="display:none">cat <span id="cat-count"
+        style="margin-left: 4px; font-size: 11px; opacity: 0.7;">(0)</span></button>
+    <input type="range" id="density-slider" min="1" max="20" value="8" style="margin-top:10px; cursor:pointer;"
+      title="Brush Density" />
   </div>
 
   <canvas id="canvas"></canvas>
@@ -1407,11 +1410,11 @@
       autoPourY += autoPourVy;
       const px = canvas.width * 0.05;
       if (autoPourX < px || autoPourX > canvas.width - px) autoPourVx *= -1;
-      
+
       // Randomly shift velocity
       if (Math.random() < 0.02) autoPourVx += (Math.random() - 0.5) * 2.0;
       autoPourVx = Math.max(-5, Math.min(5, autoPourVx));
-      
+
       mx = autoPourX;
       my = autoPourY;
     }
