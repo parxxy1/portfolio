@@ -368,27 +368,25 @@
       position: relative;
       width: 1100px;
       max-width: 100%;
-      height: 762px;
-      overflow: hidden;
+      display: flex;
+      align-items: flex-start;
     }
 
     .phones-large .phone-big-1 {
-      width: 985px;
-      height: 762px;
-      object-fit: cover;
-      position: absolute;
-      left: -223px;
-      top: 0;
+      width: 65%;
+      height: auto;
+      object-fit: contain;
+      position: relative;
       z-index: 2;
     }
 
     .phones-large .phone-big-2 {
-      width: 920px;
-      height: 712px;
-      object-fit: cover;
-      position: absolute;
-      left: 404px;
-      top: 25px;
+      width: 60%;
+      height: auto;
+      object-fit: contain;
+      position: relative;
+      margin-left: -25%;
+      margin-top: 25px;
       z-index: 1;
     }
 
@@ -476,11 +474,13 @@
 
       .hero-right .phone-1 {
         width: 400px;
+        max-width: 60%;
         height: auto;
       }
 
       .hero-right .phone-2 {
         width: 370px;
+        max-width: 55%;
         height: auto;
         margin-left: -120px;
       }
@@ -490,16 +490,24 @@
         gap: 30px;
       }
 
+      .media-row .logo-svg,
+      .media-row .macbook,
+      .media-row .phone-v1 {
+        max-width: 100%;
+        height: auto;
+        flex-shrink: 1;
+      }
+
       .media-pair {
         flex-wrap: wrap;
         gap: 14px;
       }
 
-      .media-pair .img-wide,
-      .media-pair .img-phone {
-        width: 100%;
-        max-width: 500px;
-        height: auto;
+      .media-pair .crop-box,
+      .photo-row .crop-box {
+        max-width: 100% !important;
+        flex: 1 1 auto;
+        min-width: 140px;
       }
 
       .photo-row {
@@ -516,14 +524,12 @@
         gap: 20px;
       }
 
-      .brand-row .logo-old {
-        width: 350px;
-        height: auto;
-      }
-
+      .brand-row .logo-old,
       .brand-row .logo-new {
-        width: 350px;
+        max-width: 100%;
+        width: auto;
         height: auto;
+        flex-shrink: 1;
       }
 
       .brand-guide {
@@ -532,28 +538,28 @@
 
       .phones-large {
         width: 100%;
-        height: 0;
-        padding-top: 69.27%;
-        /* 762/1100 aspect ratio */
       }
 
       .phones-large .phone-big-1 {
-        width: 89.5%;
-        height: auto;
-        left: -20.3%;
-        top: 0;
+        width: 65%;
       }
 
       .phones-large .phone-big-2 {
-        width: 83.6%;
-        height: auto;
-        left: 36.7%;
-        top: 3.3%;
+        width: 60%;
       }
 
       .pit-phones {
         flex-wrap: wrap;
         gap: 10px;
+      }
+
+      .pit-phones .crop-box {
+        max-width: 100% !important;
+        flex-shrink: 1;
+      }
+
+      .pit-phones .phone-video-wrap {
+        max-width: 100%;
       }
 
       .pit-phones img {
@@ -563,6 +569,19 @@
       .marketing-v2-row {
         flex-wrap: wrap;
         gap: 10px;
+      }
+
+      .marketing-v2-row > div {
+        max-width: 100% !important;
+        flex-shrink: 1;
+      }
+
+      .marketing-v2-row .crop-box {
+        max-width: 100% !important;
+      }
+
+      .analytics-wrap .crop-box {
+        max-width: 100%;
       }
 
       .top-bar {
@@ -621,13 +640,8 @@
         margin-left: 0px;
       }
 
-      .phones-large .phone-big-1 {
-        width: 89.5%;
-      }
 
-      .phones-large .phone-big-2 {
-        width: 83.6%;
-      }
+
 
       .analytics-img {
         width: 100%;

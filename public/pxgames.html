@@ -143,7 +143,7 @@
       font-weight: 400;
       letter-spacing: -0.64px;
       line-height: 1.34;
-      width: 410px;
+      max-width: 410px;
     }
 
     .hero-details .stats {
@@ -151,7 +151,7 @@
       font-weight: 500;
       letter-spacing: -0.64px;
       line-height: 1.34;
-      width: 413px;
+      max-width: 413px;
     }
 
     .hero-right {
@@ -381,20 +381,24 @@
 
       .hero-right .logo-img {
         width: 300px;
+        max-width: 100%;
         height: auto;
+        flex-shrink: 1;
       }
 
       .hero-right .laptop-img {
         width: 250px;
+        max-width: 100%;
         height: auto;
+        flex-shrink: 1;
       }
 
       .platform-wrap,
       .chat-wrap,
       .final-wrap {
+        width: 100%;
         max-width: 100%;
         height: auto;
-        aspect-ratio: attr(width) / attr(height);
       }
 
       .platform-wrap {
@@ -410,10 +414,42 @@
       }
 
       .platform-wrap img,
-      .chat-wrap img,
       .final-wrap img {
         width: 100%;
         height: 100%;
+      }
+
+      .chat-wrap img {
+        position: relative;
+        width: 100%;
+        height: auto;
+        left: 0;
+        top: 0;
+      }
+
+      .tournament-photos {
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+
+      .photo-rotated-wrap {
+        max-width: 100%;
+      }
+
+      .photo-portrait-wrap {
+        max-width: 100%;
+      }
+
+      .hit-counter-wrap {
+        max-width: 100%;
+        height: auto;
+        aspect-ratio: 312 / 127;
+      }
+
+      .hit-counter-wrap img {
+        position: relative;
+        width: 100%;
+        height: auto;
       }
     }
 
